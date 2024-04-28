@@ -627,3 +627,56 @@ async def delete_desenvolvedor(id_rsa: str):
         if conn:
             await conn.close()
     return {"message": "Desenvolvedor deleted successfully!"}
+@app.post("/create-dispositivos")
+async def create_dispositivos(thresholds: int = Form(...), nome: str = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO DISPOSITIVOS (thresholds, nome, matricula) VALUES (%s, %s, %s)", (thresholds, nome, matricula))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Dispositivo created successfully!"}
+
+@app.put("/update-dispositivos/{id}")
+async def update_dispositivos(id: int, thresholds: int = Form(...), nome: str = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE DISPOSITIVOS SET thresholds=%s, nome=%s, matricula=%s WHERE id=%s", (thresholds, nome, matricula, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Dispositivo updated successfully!"}
+
+@app.delete("/delete-dispositivos/{id}")
+async def delete_dispositivos(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM DISPOSITIVOS WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Dispositivo deleted successfully!"}
