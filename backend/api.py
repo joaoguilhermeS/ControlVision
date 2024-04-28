@@ -40,9 +40,9 @@ def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
     openapi_schema = get_openapi(
-        title="API - Riskeen",
+        title="API - ControlVision",
         version="0.1",
-        description="Página de API do projeto GPT Riskeen.",
+        description="Página de API do projeto Control Vision (Sistema de Monitoramento de Ambiente Fabril).",
         routes=app.routes,
     )
     openapi_schema["info"]["x-logo"] = {
@@ -70,202 +70,24 @@ db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 db_database = os.getenv("DB_DATABASE")
 
-async def create_user(email: str, username: str, password: str, team_size: int, plan: str, tokens_available: int, company_name: str, name: str):
-    fernet_key = b'aqkh5XBvqDk_lrN1XaH2UBsA2pC73v265SYZERcEeJs='
-    fernet = Fernet(fernet_key)
-    encrypted_password = fernet.encrypt(password.encode()).decode()
-    conn = None
-    cursor = None
-    try:
-        conn = await aiomysql.connect(host=os.getenv("DB_HOST"), port=3306, user=os.getenv("DB_USER"), password=os.getenv("DB_PASSWORD"), db = os.getenv("DB_DATABASE"))
-        cursor = await conn.cursor()
-        # Check if the email already exists in the database
-        await cursor.execute("SELECT email FROM users WHERE email = %s", (email,))
-        existing_email = await cursor.fetchone()
-        if existing_email:
-            raise HTTPException(status_code=400, detail="Email already registered.")
-
-        await cursor.execute("INSERT INTO users (email, username, password, team_size, plan, tokens_available, company_name, name) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                             (email, username, encrypted_password, team_size, plan, tokens_available, company_name, name))
-        await conn.commit()
-    except Exception as e:  
-        # Consider using a logging framework for logging before raising exceptions
-        print(f"Error: {e}")
-        raise HTTPException(status_code=400, detail=f"An error occurred while creating the user: {e}.")
-
-async def update_user(email: str, username: str, password: str, team_size: int, plan: str, tokens_available: int, company_name: str, name: str):
-    conn = None
-    cursor = None
-    try:
-        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
-        cursor = await conn.cursor()
-
-        await cursor.execute("UPDATE users SET username=%s, password=%s, team_size=%s, plan=%s, tokens_available=%s, company_name=%s, name=%s, updated_at=CURRENT_TIMESTAMP WHERE email=%s",
-                             (username, password, team_size, plan, tokens_available, company_name, name, email))
-        await conn.commit()
-    except Exception as e:
-        print(f"\n\n\nError: {e}\n\n\n")
-    # finally:
-    #     if cursor:
-    #         try:
-    #             await cursor.close()
-    #         except Exception as e:
-    #             print(f"\n\n\n2Error2: {e}\n\n\n")
-    #     if conn:
-    #         try: 
-    #             await conn.close()
-    #         except Exception as e:
-    #             print(f"\n\n\n3Error3: {e}\n\n\n")
-
-async def delete_user(email: str, name: str):
-    conn = None
-    cursor = None
-    try:
-        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
-        cursor = await conn.cursor()
-        # First, delete all projects related to the user
-        await cursor.execute("DELETE FROM projects WHERE user_id IN (SELECT user_id FROM users WHERE email = %s)", (email,))
-        await conn.commit()
-        # Now, delete the user
-        await cursor.execute("DELETE FROM users WHERE email = %s", (email,))
-        affected_rows = cursor.rowcount
-        await conn.commit()
-        if affected_rows == 0:
-            raise HTTPException(status_code=404, detail="User not found.")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-async def create_project(project_name: str, client_name: str, manager_name: str, date_created: str, revision_responsible_name: str, date_last_review: str, base_project_price: float, management_system: str, process_risks_identification: str, monitoring_responsible_people: str, project_context: str, user_id: int):
-    conn = None
-    cursor = None
-    date_created_str = '2024-03-31T00:24:24Z'
-    date_created_obj = datetime.fromisoformat(date_created_str.rstrip('Z'))
-    formatted_date_created = date_created_obj.strftime('%Y-%m-%d %H:%M:%S')
-    try:
-        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
-        cursor = await conn.cursor()
-        # Insert the new project into the database
-
-        if(date_last_review is not None):
-            date_last_review = date_created
-
-        try:
-            if(len(date_last_review) > 1):
-                pass
-        except:
-            date_last_review = date_created
-
-        await cursor.execute(
-            "INSERT INTO projects (project_name, client_name, manager_name, date_created, revision_responsible_name, date_last_review, base_project_price, management_system, process_risks_identification, monitoring_responsible_people, project_context, user_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-            (project_name, client_name, manager_name, date_created, revision_responsible_name, date_last_review, base_project_price, management_system, process_risks_identification, monitoring_responsible_people, project_context, user_id)
-        )
-        await conn.commit()
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.post("/register-user")
-async def register_user(
-    email: str = Form(...),
-    username: str = Form(...),
-    password: str = Form(...),
-    team_size: int = Form(...),
-    plan: str = Form(...),
-    tokens_available: int = Form(...),
-    company_name: str = Form(...),
-    name: str = Form(...)
-):
-    try:
-        await create_user(email, username, password, team_size, plan, tokens_available, company_name, name)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
-    return {"message": "User registered successfully!"}
-
-@app.put("/update-user/{email}")
-async def update_user_endpoint(
-    email: str,
-    username: str = Form(...),
-    password: str = Form(...),
-    team_size: int = Form(...),
-    plan: str = Form(...),
-    tokens_available: int = Form(...),
-    company_name: str = Form(...),
-    name: str = Form(...)
-):
-    try:
-        await update_user(email, username, password, team_size, plan, tokens_available, company_name, name)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    
-    return {"message": "User updated successfully!"}
-
-@app.delete("/delete-user/{email}")
-async def delete_user_endpoint(email: str):
-    """Delete a user by email."""
-    try:
-        success = await delete_user(email)
-        if not success:
-            raise HTTPException(status_code=404, detail="User not found.")
-        return {"message": "User deleted successfully!"}
-    except Exception as e:
-        if "object NoneType can't be used in 'await' expression" in str(e):
-            return {"message": "User deleted successfully!"}
-        raise HTTPException(status_code=400, detail=str(e))
-
-async def get_user(user_id: int):
-    conn = None
-    cursor = None
-    try:
-        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
-        cursor = await conn.cursor()
-        await cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
-        user = await cursor.fetchone()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found.")
-
-        fernet_key = b'aqkh5XBvqDk_lrN1XaH2UBsA2pC73v265SYZERcEeJs='
-        fernet = Fernet(fernet_key)
-        decrypted_password_bytes = fernet.decrypt(user[3].encode())
-        decrypted_password = decrypted_password_bytes.decode()
-        # print(decrypted_password)
-
-        user_data = {
-            "user_id": user[0],
-            "email": user[1],
-            "username": user[2],
-            "password": decrypted_password,
-            "created_at": user[4],
-            "updated_at": user[5],
-            "team_size": user[6],
-            "plan": user[7],
-            "tokens_available": user[8],
-            "company_name": user[9]
-        }
-        return user_data
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-@app.get("/get-users/{user_id}")
-async def get_user_endpoint(user_id: int):
-    return await get_user(user_id)
-
 @app.post("/create-usuario")
-async def create_usuario(nome: str = Form(...), senha: str = Form(...), usuario: str = Form(...), cpf: int = Form(...)):
+async def create_usuario(
+    matricula: str = Form(...),
+    nome: str = Form(...),
+    senha: str = Form(...),
+    usuario: str = Form(...),
+    cpf: int = Form(...)
+):
     conn = None
     cursor = None
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("INSERT INTO USUARIO (nome, senha, usuario, cpf) VALUES (%s, %s, %s, %s)", (nome, senha, usuario, cpf))
+        await cursor.execute("INSERT INTO USUARIO (matricula, nome, senha, usuario, cpf) VALUES (%s, %s, %s, %s, %s)", (matricula, nome, senha, usuario, cpf))
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    
     return {"message": "Usuario created successfully!"}
 
 @app.put("/update-usuario/{matricula}")
@@ -279,11 +101,11 @@ async def update_usuario(matricula: int, nome: str = Form(...), senha: str = For
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Usuario updated successfully!"}
 
 @app.delete("/delete-usuario/{matricula}")
@@ -297,11 +119,11 @@ async def delete_usuario(matricula: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Usuario deleted successfully!"}
 
 
@@ -316,11 +138,11 @@ async def create_info_produtividade(data_produtividade: datetime = Form(...), li
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "InfoProdutividade created successfully!"}
 
 @app.put("/update-info-produtividade/{id}")
@@ -334,11 +156,11 @@ async def update_info_produtividade(id: int, data_produtividade: datetime = Form
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "InfoProdutividade updated successfully!"}
 
 @app.delete("/delete-info-produtividade/{id}")
@@ -352,11 +174,11 @@ async def delete_info_produtividade(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "InfoProdutividade deleted successfully!"}
 
 @app.post("/create-observacoes")
@@ -370,11 +192,11 @@ async def create_observacoes(data_observacoes: datetime = Form(...), conteudo: s
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Observacoes created successfully!"}
 
 @app.put("/update-observacoes/{id}")
@@ -388,11 +210,11 @@ async def update_observacoes(id: int, data_observacoes: datetime = Form(...), co
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Observacoes updated successfully!"}
 
 @app.delete("/delete-observacoes/{id}")
@@ -406,15 +228,13 @@ async def delete_observacoes(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Observacoes deleted successfully!"}
 
-if __name__ == '__main__':
-    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.post("/create-producao")
 async def create_producao(tipo: int = Form(...), data_producao: datetime = Form(...), quantidade: int = Form(...), matricula: int = Form(...)):
     conn = None
@@ -426,11 +246,11 @@ async def create_producao(tipo: int = Form(...), data_producao: datetime = Form(
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Producao created successfully!"}
 
 @app.put("/update-producao/{id}")
@@ -444,11 +264,11 @@ async def update_producao(id: int, tipo: int = Form(...), data_producao: datetim
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Producao updated successfully!"}
 
 @app.delete("/delete-producao/{id}")
@@ -462,11 +282,11 @@ async def delete_producao(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Producao deleted successfully!"}
 @app.post("/create-vps")
 async def create_vps(ip: str = Form(...), root_senha: str = Form(...), id_rsa: str = Form(...)):
@@ -479,11 +299,11 @@ async def create_vps(ip: str = Form(...), root_senha: str = Form(...), id_rsa: s
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "VPS created successfully!"}
 
 @app.put("/update-vps/{ip}")
@@ -497,11 +317,11 @@ async def update_vps(ip: str, root_senha: str = Form(...), id_rsa: str = Form(..
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "VPS updated successfully!"}
 
 @app.delete("/delete-vps/{ip}")
@@ -515,11 +335,11 @@ async def delete_vps(ip: str):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "VPS deleted successfully!"}
 @app.post("/create-manutencao")
 async def create_manutencao(data_de_manuntencao: datetime = Form(...), descricao: str = Form(...), id_rsa: str = Form(...)):
@@ -532,11 +352,11 @@ async def create_manutencao(data_de_manuntencao: datetime = Form(...), descricao
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Manutencao created successfully!"}
 
 @app.put("/update-manutencao/{id}")
@@ -550,11 +370,11 @@ async def update_manutencao(id: int, data_de_manuntencao: datetime = Form(...), 
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Manutencao updated successfully!"}
 
 @app.delete("/delete-manutencao/{id}")
@@ -568,11 +388,11 @@ async def delete_manutencao(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Manutencao deleted successfully!"}
 @app.post("/create-desenvolvedor")
 async def create_desenvolvedor(id_rsa: str = Form(...), matricula: int = Form(...)):
@@ -585,11 +405,11 @@ async def create_desenvolvedor(id_rsa: str = Form(...), matricula: int = Form(..
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Desenvolvedor created successfully!"}
 
 @app.put("/update-desenvolvedor/{id_rsa}")
@@ -603,11 +423,11 @@ async def update_desenvolvedor(id_rsa: str, matricula: int = Form(...)):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Desenvolvedor updated successfully!"}
 
 @app.delete("/delete-desenvolvedor/{id_rsa}")
@@ -621,11 +441,11 @@ async def delete_desenvolvedor(id_rsa: str):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Desenvolvedor deleted successfully!"}
 @app.post("/create-dispositivos")
 async def create_dispositivos(thresholds: int = Form(...), nome: str = Form(...), matricula: int = Form(...)):
@@ -638,11 +458,11 @@ async def create_dispositivos(thresholds: int = Form(...), nome: str = Form(...)
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Dispositivo created successfully!"}
 
 @app.put("/update-dispositivos/{id}")
@@ -656,11 +476,11 @@ async def update_dispositivos(id: int, thresholds: int = Form(...), nome: str = 
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Dispositivo updated successfully!"}
 
 @app.delete("/delete-dispositivos/{id}")
@@ -674,11 +494,11 @@ async def delete_dispositivos(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Dispositivo deleted successfully!"}
 @app.post("/create-camera")
 async def create_camera(ip: str = Form(...), id_ext: int = Form(...)):
@@ -691,11 +511,11 @@ async def create_camera(ip: str = Form(...), id_ext: int = Form(...)):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Camera created successfully!"}
 
 @app.put("/update-camera/{id}")
@@ -709,11 +529,11 @@ async def update_camera(id: int, ip: str = Form(...), id_ext: int = Form(...)):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Camera updated successfully!"}
 
 @app.delete("/delete-camera/{id}")
@@ -727,11 +547,11 @@ async def delete_camera(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Camera deleted successfully!"}
 @app.post("/create-sensor")
 async def create_sensor(ip: str = Form(...), unidade: str = Form(...), valor: float = Form(...), id_ext: int = Form(...)):
@@ -744,11 +564,11 @@ async def create_sensor(ip: str = Form(...), unidade: str = Form(...), valor: fl
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Sensor created successfully!"}
 
 @app.put("/update-sensor/{id}")
@@ -762,11 +582,11 @@ async def update_sensor(id: int, ip: str = Form(...), unidade: str = Form(...), 
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Sensor updated successfully!"}
 
 @app.delete("/delete-sensor/{id}")
@@ -780,11 +600,11 @@ async def delete_sensor(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Sensor deleted successfully!"}
 @app.post("/create-alarme")
 async def create_alarme(data_do_alarme: datetime = Form(...), tipo: str = Form(...), texto: str = Form(...), id_dispositivo: int = Form(...)):
@@ -797,11 +617,11 @@ async def create_alarme(data_do_alarme: datetime = Form(...), tipo: str = Form(.
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Alarme created successfully!"}
 
 @app.put("/update-alarme/{id}")
@@ -815,11 +635,11 @@ async def update_alarme(id: int, data_do_alarme: datetime = Form(...), tipo: str
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Alarme updated successfully!"}
 
 @app.delete("/delete-alarme/{id}")
@@ -833,9 +653,12 @@ async def delete_alarme(id: int):
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
     return {"message": "Alarme deleted successfully!"}
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
