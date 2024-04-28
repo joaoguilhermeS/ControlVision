@@ -305,8 +305,6 @@ async def delete_usuario(matricula: int):
     return {"message": "Usuario deleted successfully!"}
 
 
-if __name__ == '__main__':
-    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.post("/create-info-produtividade")
 async def create_info_produtividade(data_produtividade: datetime = Form(...), lista_de_produtividade: str = Form(...), matricula: int = Form(...)):
     conn = None
@@ -361,5 +359,5 @@ async def delete_info_produtividade(id: int):
             await conn.close()
     return {"message": "InfoProdutividade deleted successfully!"}
 
-# Repeat similar patterns for other tables: OBSERVACOES, PRODUCAO, VPS, MANUTENCAO, DESENVOLVEDOR, DISPOSITIVOS, CAMERA, SENSOR, ALARME
-# Due to the length of the code, I will not write out all the endpoints here, but you would follow a similar pattern for each table.
+if __name__ == '__main__':
+    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
