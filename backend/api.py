@@ -733,3 +733,56 @@ async def delete_camera(id: int):
         if conn:
             await conn.close()
     return {"message": "Camera deleted successfully!"}
+@app.post("/create-sensor")
+async def create_sensor(ip: str = Form(...), unidade: str = Form(...), valor: float = Form(...), id_ext: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO SENSOR (ip, unidade, valor, id_ext) VALUES (%s, %s, %s, %s)", (ip, unidade, valor, id_ext))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Sensor created successfully!"}
+
+@app.put("/update-sensor/{id}")
+async def update_sensor(id: int, ip: str = Form(...), unidade: str = Form(...), valor: float = Form(...), id_ext: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE SENSOR SET ip=%s, unidade=%s, valor=%s, id_ext=%s WHERE id=%s", (ip, unidade, valor, id_ext, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Sensor updated successfully!"}
+
+@app.delete("/delete-sensor/{id}")
+async def delete_sensor(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM SENSOR WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Sensor deleted successfully!"}
