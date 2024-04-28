@@ -786,3 +786,56 @@ async def delete_sensor(id: int):
         if conn:
             await conn.close()
     return {"message": "Sensor deleted successfully!"}
+@app.post("/create-alarme")
+async def create_alarme(data_do_alarme: datetime = Form(...), tipo: str = Form(...), texto: str = Form(...), id_dispositivo: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO ALARME (data_do_alarme, tipo, texto, id_dispositivo) VALUES (%s, %s, %s, %s)", (data_do_alarme, tipo, texto, id_dispositivo))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Alarme created successfully!"}
+
+@app.put("/update-alarme/{id}")
+async def update_alarme(id: int, data_do_alarme: datetime = Form(...), tipo: str = Form(...), texto: str = Form(...), id_dispositivo: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE ALARME SET data_do_alarme=%s, tipo=%s, texto=%s, id_dispositivo=%s WHERE id=%s", (data_do_alarme, tipo, texto, id_dispositivo, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Alarme updated successfully!"}
+
+@app.delete("/delete-alarme/{id}")
+async def delete_alarme(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM ALARME WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Alarme deleted successfully!"}
