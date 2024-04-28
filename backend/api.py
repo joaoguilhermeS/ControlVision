@@ -5145,3 +5145,28 @@ async def get_cameras():
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+@app.get("/sensores", response_model=List[Sensor])
+async def get_sensores():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor(aiomysql.DictCursor)
+        await cursor.execute("SELECT * FROM SENSOR")
+        result = await cursor.fetchall()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/alarmes", response_model=List[Alarme])
+async def get_alarmes():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor(aiomysql.DictCursor)
+        await cursor.execute("SELECT * FROM ALARME")
+        result = await cursor.fetchall()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
