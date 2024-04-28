@@ -359,8 +359,6 @@ async def delete_info_produtividade(id: int):
             await conn.close()
     return {"message": "InfoProdutividade deleted successfully!"}
 
-if __name__ == '__main__':
-    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.post("/create-observacoes")
 async def create_observacoes(data_observacoes: datetime = Form(...), conteudo: str = Form(...), matricula: int = Form(...)):
     conn = None
@@ -414,3 +412,6 @@ async def delete_observacoes(id: int):
         if conn:
             await conn.close()
     return {"message": "Observacoes deleted successfully!"}
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
