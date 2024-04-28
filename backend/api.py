@@ -15,78 +15,11 @@ from datetime import datetime
 from cryptography.fernet import Fernet, InvalidToken
 import jwt
 from typing import List, Optional
-from pydantic import BaseModel
 import math
 from fastapi.responses import StreamingResponse
 from openai import OpenAI
 import requests
 import json
-
-class Usuario(BaseModel):
-    matricula: int
-    nome: str
-    senha: str
-    usuario: str
-    cpf: int
-
-class InfoProdutividade(BaseModel):
-    id: int
-    data_produtividade: datetime
-    lista_de_produtividade: str
-    matricula: int
-
-class Observacoes(BaseModel):
-    id: int
-    data_observacoes: datetime
-    conteudo: str
-    matricula: int
-
-class Producao(BaseModel):
-    id: int
-    tipo: int
-    data_producao: datetime
-    quantidade: int
-    matricula: int
-
-class VPS(BaseModel):
-    ip: str
-    root_senha: str
-    id_rsa: str
-
-class Manutencao(BaseModel):
-    id: int
-    data_de_manuntencao: datetime
-    descricao: str
-    id_rsa: str
-
-class Desenvolvedor(BaseModel):
-    id_rsa: str
-    matricula: int
-
-class Dispositivos(BaseModel):
-    id: int
-    thresholds: int
-    nome: str
-    matricula: int
-
-class Camera(BaseModel):
-    id: int
-    ip: str
-    id_ext: int
-
-class Sensor(BaseModel):
-    id: int
-    ip: str
-    unidade: str
-    valor: float
-    id_ext: int
-
-class Alarme(BaseModel):
-    id: int
-    data_do_alarme: datetime
-    tipo: str
-    texto: str
-    id_dispositivo: int
 
 
 client = OpenAI(api_key='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')
@@ -179,7 +112,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -192,7 +125,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -205,7 +138,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -218,7 +151,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -244,7 +177,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -324,7 +257,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -337,7 +270,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -350,7 +283,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -363,7 +296,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -389,7 +322,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -472,7 +405,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -485,7 +418,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -498,7 +431,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -511,7 +444,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -537,7 +470,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -621,7 +554,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -634,7 +567,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -647,7 +580,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -660,7 +593,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -686,7 +619,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -769,7 +702,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -782,7 +715,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -795,7 +728,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -808,7 +741,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -834,7 +767,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -917,7 +850,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -930,7 +863,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -943,7 +876,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -956,7 +889,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -982,7 +915,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1065,7 +998,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1078,7 +1011,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1091,7 +1024,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1104,7 +1037,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -1130,7 +1063,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1213,7 +1146,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1226,7 +1159,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1239,7 +1172,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1252,7 +1185,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -1278,7 +1211,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1361,7 +1294,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1374,7 +1307,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1387,7 +1320,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1400,7 +1333,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -1426,7 +1359,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1509,7 +1442,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1522,7 +1455,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1535,7 +1468,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1548,7 +1481,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -1574,7 +1507,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1657,7 +1590,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1670,7 +1603,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1683,7 +1616,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1696,7 +1629,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -1722,7 +1655,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1805,7 +1738,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1818,7 +1751,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1831,7 +1764,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1844,7 +1777,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -1870,7 +1803,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -1952,7 +1885,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -1965,7 +1898,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -1978,7 +1911,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -1991,7 +1924,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2017,7 +1950,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2100,7 +2033,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2113,7 +2046,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -2126,7 +2059,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -2139,7 +2072,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2165,7 +2098,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2248,7 +2181,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2261,7 +2194,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -2274,7 +2207,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -2287,7 +2220,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2313,7 +2246,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2395,7 +2328,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2408,7 +2341,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -2421,7 +2354,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -2434,7 +2367,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2460,7 +2393,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2543,7 +2476,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2556,7 +2489,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -2569,7 +2502,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -2582,7 +2515,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2608,7 +2541,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2691,7 +2624,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2704,7 +2637,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -2717,7 +2650,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -2730,7 +2663,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2756,7 +2689,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2838,7 +2771,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2851,7 +2784,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -2864,7 +2797,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -2877,7 +2810,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -2903,7 +2836,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -2986,7 +2919,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -2999,7 +2932,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3012,7 +2945,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3025,7 +2958,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3051,7 +2984,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -3134,7 +3067,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -3147,7 +3080,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3160,7 +3093,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3173,7 +3106,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3199,7 +3132,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -3281,7 +3214,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -3294,7 +3227,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3307,7 +3240,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3320,7 +3253,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3346,7 +3279,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -3429,7 +3362,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -3442,7 +3375,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3455,7 +3388,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3468,7 +3401,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3494,7 +3427,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -3577,7 +3510,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -3590,7 +3523,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3603,7 +3536,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3616,7 +3549,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3642,7 +3575,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -3724,7 +3657,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -3737,7 +3670,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3750,7 +3683,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3763,7 +3696,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3789,7 +3722,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -3872,7 +3805,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -3885,7 +3818,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -3898,7 +3831,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -3911,7 +3844,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -3937,7 +3870,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4020,7 +3953,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4033,7 +3966,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4046,7 +3979,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4059,7 +3992,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4085,7 +4018,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4167,7 +4100,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4180,7 +4113,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4193,7 +4126,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4206,7 +4139,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4232,7 +4165,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4315,7 +4248,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4328,7 +4261,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4341,7 +4274,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4354,7 +4287,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4380,7 +4313,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4463,7 +4396,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4476,7 +4409,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4489,7 +4422,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4502,7 +4435,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4528,7 +4461,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4610,7 +4543,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4623,7 +4556,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4636,7 +4569,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4649,7 +4582,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4675,7 +4608,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4758,7 +4691,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4771,7 +4704,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4784,7 +4717,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4797,7 +4730,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4823,7 +4756,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -4906,7 +4839,7 @@ async def get_info_produtividade():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -4919,7 +4852,7 @@ async def get_observacao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -4932,7 +4865,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -4945,7 +4878,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -4971,7 +4904,7 @@ async def get_desenvolvedor():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -5031,7 +4964,7 @@ async def get_alarme():
 
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
-@app.get("/usuarios/{matricula}", response_model=Usuario)
+@app.get("/usuarios/{matricula}")
 async def get_usuario(matricula: int):
     conn = None
     cursor = None
@@ -5044,7 +4977,7 @@ async def get_usuario(matricula: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/info-produtividades/{id}", response_model=InfoProdutividade)
+@app.get("/info-produtividades/{id}")
 async def get_info_produtividade(id: int):
     conn = None
     cursor = None
@@ -5057,7 +4990,7 @@ async def get_info_produtividade(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/observacoes/{id}", response_model=Observacoes)
+@app.get("/observacoes/{id}")
 async def get_observacao(id: int):
     conn = None
     cursor = None
@@ -5069,7 +5002,7 @@ async def get_observacao(id: int):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-@app.get("/producao/{id}", response_model=Producao)
+@app.get("/producao/{id}")
 async def get_producao(id: int):
     conn = None
     cursor = None
@@ -5082,7 +5015,7 @@ async def get_producao(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/vps/{ip}", response_model=VPS)
+@app.get("/vps/{ip}")
 async def get_vps(ip: str):
     conn = None
     cursor = None
@@ -5095,7 +5028,7 @@ async def get_vps(ip: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/manutencao/{id}", response_model=Manutencao)
+@app.get("/manutencao/{id}")
 async def get_manutencao(id: int):
     conn = None
     cursor = None
@@ -5107,7 +5040,7 @@ async def get_manutencao(id: int):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-@app.get("/desenvolvedores/{id_rsa}", response_model=Desenvolvedor)
+@app.get("/desenvolvedores/{id_rsa}")
 async def get_desenvolvedor(id_rsa: str):
     conn = None
     cursor = None
@@ -5120,7 +5053,7 @@ async def get_desenvolvedor(id_rsa: str):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/dispositivos/{id}", response_model=Dispositivos)
+@app.get("/dispositivos/{id}")
 async def get_dispositivo(id: int):
     conn = None
     cursor = None
@@ -5133,7 +5066,7 @@ async def get_dispositivo(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/cameras/{id}", response_model=Camera)
+@app.get("/cameras/{id}")
 async def get_camera(id: int):
     conn = None
     cursor = None
@@ -5145,7 +5078,7 @@ async def get_camera(id: int):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-@app.get("/sensores/{id}", response_model=Sensor)
+@app.get("/sensores/{id}")
 async def get_sensor(id: int):
     conn = None
     cursor = None
@@ -5158,7 +5091,7 @@ async def get_sensor(id: int):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.get("/alarmes/{id}", response_model=Alarme)
+@app.get("/alarmes/{id}")
 async def get_alarme(id: int):
     conn = None
     cursor = None
