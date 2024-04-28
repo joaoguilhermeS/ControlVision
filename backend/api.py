@@ -680,3 +680,56 @@ async def delete_dispositivos(id: int):
         if conn:
             await conn.close()
     return {"message": "Dispositivo deleted successfully!"}
+@app.post("/create-camera")
+async def create_camera(ip: str = Form(...), id_ext: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO CAMERA (ip, id_ext) VALUES (%s, %s)", (ip, id_ext))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Camera created successfully!"}
+
+@app.put("/update-camera/{id}")
+async def update_camera(id: int, ip: str = Form(...), id_ext: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE CAMERA SET ip=%s, id_ext=%s WHERE id=%s", (ip, id_ext, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Camera updated successfully!"}
+
+@app.delete("/delete-camera/{id}")
+async def delete_camera(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM CAMERA WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Camera deleted successfully!"}
