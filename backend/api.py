@@ -12,7 +12,7 @@ import aiomysql
 import asyncio
 from dotenv import load_dotenv
 from datetime import datetime
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 import jwt
 from typing import List, Optional
 from pydantic import BaseModel
@@ -69,6 +69,17 @@ db_host = os.getenv("DB_HOST")
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 db_database = os.getenv("DB_DATABASE")
+fernet_key = os.getenv("FERNET_KEY").encode()
+fernet = Fernet(fernet_key)
+
+def encrypt_password(password: str) -> str:
+    return fernet.encrypt(password.encode()).decode()
+
+def decrypt_password(encrypted_password: str) -> str:
+    try:
+        return fernet.decrypt(encrypted_password.encode()).decode()
+    except InvalidToken:
+        raise HTTPException(status_code=400, detail="Invalid encryption token")
 
 @app.post("/create-usuario")
 async def create_usuario(
@@ -83,7 +94,8 @@ async def create_usuario(
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("INSERT INTO USUARIO (matricula, nome, senha, usuario, cpf) VALUES (%s, %s, %s, %s, %s)", (matricula, nome, senha, usuario, cpf))
+        encrypted_senha = encrypt_password(senha)
+        await cursor.execute("INSERT INTO USUARIO (matricula, nome, senha, usuario, cpf) VALUES (%s, %s, %s, %s, %s)", (matricula, nome, encrypted_senha, usuario, cpf))
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -97,7 +109,8 @@ async def update_usuario(matricula: int, nome: str = Form(...), senha: str = For
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("UPDATE USUARIO SET nome=%s, senha=%s, usuario=%s, cpf=%s WHERE matricula=%s", (nome, senha, usuario, cpf, matricula))
+        encrypted_senha = encrypt_password(senha)
+        await cursor.execute("UPDATE USUARIO SET nome=%s, senha=%s, usuario=%s, cpf=%s WHERE matricula=%s", (nome, encrypted_senha, usuario, cpf, matricula))
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
