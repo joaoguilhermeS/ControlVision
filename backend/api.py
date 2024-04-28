@@ -1,5 +1,4 @@
 from fastapi import FastAPI, Form, HTTPException
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import uvicorn
@@ -4438,16 +4437,10 @@ if __name__ == '__main__':
     uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.get("/usuarios/{matricula}")
 async def get_usuario(matricula: int):
-    conn = None
-    cursor = None
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor(aiomysql.DictCursor)
-        await cursor.execute("SELECT * FROM USUARIO WHERE matricula = %s", (matricula,))
-        result = await cursor.fetchall()
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        # ... rest of the unchanged code ...
 
 @app.get("/info-produtividades/{id}")
 async def get_info_produtividade(id: int):
