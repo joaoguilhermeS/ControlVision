@@ -574,3 +574,56 @@ async def delete_manutencao(id: int):
         if conn:
             await conn.close()
     return {"message": "Manutencao deleted successfully!"}
+@app.post("/create-desenvolvedor")
+async def create_desenvolvedor(id_rsa: str = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO DESENVOLVEDOR (id_rsa, matricula) VALUES (%s, %s)", (id_rsa, matricula))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Desenvolvedor created successfully!"}
+
+@app.put("/update-desenvolvedor/{id_rsa}")
+async def update_desenvolvedor(id_rsa: str, matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE DESENVOLVEDOR SET matricula=%s WHERE id_rsa=%s", (matricula, id_rsa))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Desenvolvedor updated successfully!"}
+
+@app.delete("/delete-desenvolvedor/{id_rsa}")
+async def delete_desenvolvedor(id_rsa: str):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM DESENVOLVEDOR WHERE id_rsa=%s", (id_rsa,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Desenvolvedor deleted successfully!"}
