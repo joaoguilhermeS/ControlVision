@@ -15,87 +15,89 @@ DROP TABLE IF EXISTS USUARIO;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE USUARIO (
-    matricula INTEGER PRIMARY KEY,
+    matricula INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255),
     senha VARCHAR(255),
     usuario VARCHAR(255),
-    cpf INTEGER
+    cpf BIGINT
 );
 
 CREATE TABLE INFO_PRODUTIVIDADE (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     data TIMESTAMP,
     lista_de_produtividade TEXT,
-    matricula INT,
+    matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
 );
 
 CREATE TABLE OBSERVACOES (
-    id INTEGER PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     data TIMESTAMP,
     conteudo TEXT,
-    matricula INTEGER,
+    matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
 );
 
 CREATE TABLE PRODUCAO (
-    id INTEGER PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     tipo INTEGER,
     data TIMESTAMP,
     quantidade INTEGER,
-    matricula INTEGER,
+    matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
 );
 
 CREATE TABLE VPS (
     ip VARCHAR(255) PRIMARY KEY,
     root_senha VARCHAR(255),
-    id_rsa VARCHAR(255)
+    id_rsa VARCHAR(255) UNIQUE
 );
 
 CREATE TABLE MANUTENCAO (
-    id INTEGER AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     data TIMESTAMP,
     descricao VARCHAR(255),
-    id_rsa VARCHAR(255),
+    id_rsa VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_rsa) REFERENCES VPS(id_rsa)
 );
 
 CREATE TABLE DESENVOLVEDOR (
-    id_rsa VARCHAR(255) PRIMARY KEY,
+    id_rsa VARCHAR(255) NOT NULL,
     matricula INTEGER,
+    PRIMARY KEY (id_rsa, matricula),
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
 );
 
 CREATE TABLE DISPOSITIVOS (
-    id INTEGER PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     thresholds INTEGER,
     nome VARCHAR(255),
-    matricula INTEGER,
+    matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
 );
 
 CREATE TABLE CAMERA (
-    id INTEGER PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     ip VARCHAR(255),
     id_ext INTEGER,
+    FOREIGN KEY (id_ext) REFERENCES DISPOSITIVOS(id)
     FOREIGN KEY (id_ext) REFERENCES DISPOSITIVOS(id)
 );
 
 CREATE TABLE SENSOR (
-    id INTEGER PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     ip VARCHAR(255),
     unidade VARCHAR(255),
     valor FLOAT,
-    id_ext INTEGER,
+    id_ext INT NOT NULL,
     FOREIGN KEY (id_ext) REFERENCES DISPOSITIVOS(id)
 );
 
 CREATE TABLE ALARME (
-    id INTEGER PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     data TIMESTAMP,
     tipo VARCHAR(255),
     texto VARCHAR(255),
-    id_dispositivo INTEGER,
+    id_dispositivo INT NOT NULL,
     FOREIGN KEY (id_dispositivo) REFERENCES DISPOSITIVOS(id)
 );
