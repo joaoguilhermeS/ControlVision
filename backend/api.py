@@ -738,3 +738,66 @@ async def get_observacoes(id: int):
         if conn:
             await conn.close()
 
+@app.get("/get-producao/{id}")
+async def get_producao(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM PRODUCAO WHERE id=%s", (id,))
+        producao = await cursor.fetchone()
+        if producao:
+            return {"id": producao[0], "tipo": producao[1], "data_producao": producao[2], "quantidade": producao[3], "matricula": producao[4]}
+        else:
+            raise HTTPException(status_code=404, detail="Producao not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-vps/{ip}")
+async def get_vps(ip: str):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM VPS WHERE ip=%s", (ip,))
+        vps = await cursor.fetchone()
+        if vps:
+            return {"ip": vps[0], "root_senha": vps[1], "id_rsa": vps[2]}
+        else:
+            raise HTTPException(status_code=404, detail="VPS not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-manutencao/{id}")
+async def get_manutencao(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM MANUTENCAO WHERE id=%s", (id,))
+        manutencao = await cursor.fetchone()
+        if manutencao:
+            return {"id": manutencao[0], "data_de_manuntencao": manutencao[1], "descricao": manutencao[2], "id_rsa": manutencao[3]}
+        else:
+            raise HTTPException(status_code=404, detail="Manutencao not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
