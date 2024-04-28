@@ -361,3 +361,56 @@ async def delete_info_produtividade(id: int):
 
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+@app.post("/create-observacoes")
+async def create_observacoes(data_observacoes: datetime = Form(...), conteudo: str = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO OBSERVACOES (data_observacoes, conteudo, matricula) VALUES (%s, %s, %s)", (data_observacoes, conteudo, matricula))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Observacoes created successfully!"}
+
+@app.put("/update-observacoes/{id}")
+async def update_observacoes(id: int, data_observacoes: datetime = Form(...), conteudo: str = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE OBSERVACOES SET data_observacoes=%s, conteudo=%s, matricula=%s WHERE id=%s", (data_observacoes, conteudo, matricula, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Observacoes updated successfully!"}
+
+@app.delete("/delete-observacoes/{id}")
+async def delete_observacoes(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM OBSERVACOES WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Observacoes deleted successfully!"}
