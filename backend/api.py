@@ -415,3 +415,56 @@ async def delete_observacoes(id: int):
 
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+@app.post("/create-producao")
+async def create_producao(tipo: int = Form(...), data_producao: datetime = Form(...), quantidade: int = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO PRODUCAO (tipo, data_producao, quantidade, matricula) VALUES (%s, %s, %s, %s)", (tipo, data_producao, quantidade, matricula))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Producao created successfully!"}
+
+@app.put("/update-producao/{id}")
+async def update_producao(id: int, tipo: int = Form(...), data_producao: datetime = Form(...), quantidade: int = Form(...), matricula: int = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE PRODUCAO SET tipo=%s, data_producao=%s, quantidade=%s, matricula=%s WHERE id=%s", (tipo, data_producao, quantidade, matricula, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Producao updated successfully!"}
+
+@app.delete("/delete-producao/{id}")
+async def delete_producao(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM PRODUCAO WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Producao deleted successfully!"}
