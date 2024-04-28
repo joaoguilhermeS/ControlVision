@@ -250,9 +250,7 @@ async def get_user(user_id: int):
 async def get_user_endpoint(user_id: int):
     return await get_user(user_id)
 
-
-if __name__ == '__main__':
-    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.post("/create-usuario")
+@app.post("/create-usuario")
 async def create_usuario(nome: str = Form(...), senha: str = Form(...), usuario: str = Form(...), cpf: int = Form(...)):
     conn = None
     cursor = None
@@ -306,5 +304,6 @@ async def delete_usuario(matricula: int):
             await conn.close()
     return {"message": "Usuario deleted successfully!"}
 
-# Repeat similar patterns for other tables: INFO_PRODUTIVIDADE, OBSERVACOES, PRODUCAO, VPS, MANUTENCAO, DESENVOLVEDOR, DISPOSITIVOS, CAMERA, SENSOR, ALARME
-# Due to the length of the code, I will not write out all the endpoints here, but you would follow a similar pattern for each table.
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
