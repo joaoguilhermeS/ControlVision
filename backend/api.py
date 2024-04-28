@@ -521,3 +521,56 @@ async def delete_vps(ip: str):
         if conn:
             await conn.close()
     return {"message": "VPS deleted successfully!"}
+@app.post("/create-manutencao")
+async def create_manutencao(data_de_manuntencao: datetime = Form(...), descricao: str = Form(...), id_rsa: str = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO MANUTENCAO (data_de_manuntencao, descricao, id_rsa) VALUES (%s, %s, %s)", (data_de_manuntencao, descricao, id_rsa))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Manutencao created successfully!"}
+
+@app.put("/update-manutencao/{id}")
+async def update_manutencao(id: int, data_de_manuntencao: datetime = Form(...), descricao: str = Form(...), id_rsa: str = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE MANUTENCAO SET data_de_manuntencao=%s, descricao=%s, id_rsa=%s WHERE id=%s", (data_de_manuntencao, descricao, id_rsa, id))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Manutencao updated successfully!"}
+
+@app.delete("/delete-manutencao/{id}")
+async def delete_manutencao(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM MANUTENCAO WHERE id=%s", (id,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "Manutencao deleted successfully!"}
