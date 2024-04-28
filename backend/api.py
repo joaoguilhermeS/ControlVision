@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 from cryptography.fernet import Fernet, InvalidToken
 import jwt
-from typing import List, Optional
+from typing import Optional
 import math
 from fastapi.responses import StreamingResponse
 from openai import OpenAI
