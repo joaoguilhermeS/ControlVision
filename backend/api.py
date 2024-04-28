@@ -468,3 +468,56 @@ async def delete_producao(id: int):
         if conn:
             await conn.close()
     return {"message": "Producao deleted successfully!"}
+@app.post("/create-vps")
+async def create_vps(ip: str = Form(...), root_senha: str = Form(...), id_rsa: str = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("INSERT INTO VPS (ip, root_senha, id_rsa) VALUES (%s, %s, %s)", (ip, root_senha, id_rsa))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "VPS created successfully!"}
+
+@app.put("/update-vps/{ip}")
+async def update_vps(ip: str, root_senha: str = Form(...), id_rsa: str = Form(...)):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("UPDATE VPS SET root_senha=%s, id_rsa=%s WHERE ip=%s", (root_senha, id_rsa, ip))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "VPS updated successfully!"}
+
+@app.delete("/delete-vps/{ip}")
+async def delete_vps(ip: str):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("DELETE FROM VPS WHERE ip=%s", (ip,))
+        await conn.commit()
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+    return {"message": "VPS deleted successfully!"}
