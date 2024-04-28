@@ -5107,3 +5107,41 @@ async def get_manutencao():
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+@app.get("/desenvolvedores", response_model=List[Desenvolvedor])
+async def get_desenvolvedores():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor(aiomysql.DictCursor)
+        await cursor.execute("SELECT * FROM DESENVOLVEDOR")
+        result = await cursor.fetchall()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/dispositivos", response_model=List[Dispositivos])
+async def get_dispositivos():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor(aiomysql.DictCursor)
+        await cursor.execute("SELECT * FROM DISPOSITIVOS")
+        result = await cursor.fetchall()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/cameras", response_model=List[Camera])
+async def get_cameras():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor(aiomysql.DictCursor)
+        await cursor.execute("SELECT * FROM CAMERA")
+        result = await cursor.fetchall()
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
