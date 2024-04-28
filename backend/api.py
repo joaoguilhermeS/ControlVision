@@ -801,3 +801,107 @@ async def get_manutencao(id: int):
         if conn:
             await conn.close()
 
+@app.get("/get-desenvolvedor/{id_rsa}")
+async def get_desenvolvedor(id_rsa: str):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM DESENVOLVEDOR WHERE id_rsa=%s", (id_rsa,))
+        desenvolvedor = await cursor.fetchone()
+        if desenvolvedor:
+            return {"id_rsa": desenvolvedor[0], "matricula": desenvolvedor[1]}
+        else:
+            raise HTTPException(status_code=404, detail="Desenvolvedor not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-dispositivos/{id}")
+async def get_dispositivos(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM DISPOSITIVOS WHERE id=%s", (id,))
+        dispositivos = await cursor.fetchone()
+        if dispositivos:
+            return {"id": dispositivos[0], "thresholds": dispositivos[1], "nome": dispositivos[2], "matricula": dispositivos[3]}
+        else:
+            raise HTTPException(status_code=404, detail="Dispositivos not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-camera/{id}")
+async def get_camera(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM CAMERA WHERE id=%s", (id,))
+        camera = await cursor.fetchone()
+        if camera:
+            return {"id": camera[0], "ip": camera[1], "id_ext": camera[2]}
+        else:
+            raise HTTPException(status_code=404, detail="Camera not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-sensor/{id}")
+async def get_sensor(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM SENSOR WHERE id=%s", (id,))
+        sensor = await cursor.fetchone()
+        if sensor:
+            return {"id": sensor[0], "ip": sensor[1], "unidade": sensor[2], "valor": sensor[3], "id_ext": sensor[4]}
+        else:
+            raise HTTPException(status_code=404, detail="Sensor not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-alarme/{id}")
+async def get_alarme(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM ALARME WHERE id=%s", (id,))
+        alarme = await cursor.fetchone()
+        if alarme:
+            return {"id": alarme[0], "data_do_alarme": alarme[1], "tipo": alarme[2], "texto": alarme[3], "id_dispositivo": alarme[4]}
+        else:
+            raise HTTPException(status_code=404, detail="Alarme not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
