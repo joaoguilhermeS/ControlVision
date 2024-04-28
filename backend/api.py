@@ -675,3 +675,66 @@ async def delete_alarme(id: int):
 
 if __name__ == '__main__':
     uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+@app.get("/get-usuario/{matricula}")
+async def get_usuario(matricula: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM USUARIO WHERE matricula=%s", (matricula,))
+        usuario = await cursor.fetchone()
+        if usuario:
+            return {"matricula": usuario[0], "nome": usuario[1], "senha": usuario[2], "usuario": usuario[3], "cpf": usuario[4]}
+        else:
+            raise HTTPException(status_code=404, detail="Usuario not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-info-produtividade/{id}")
+async def get_info_produtividade(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM INFO_PRODUTIVIDADE WHERE id=%s", (id,))
+        info_produtividade = await cursor.fetchone()
+        if info_produtividade:
+            return {"id": info_produtividade[0], "data_produtividade": info_produtividade[1], "lista_de_produtividade": info_produtividade[2], "matricula": info_produtividade[3]}
+        else:
+            raise HTTPException(status_code=404, detail="InfoProdutividade not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
+@app.get("/get-observacoes/{id}")
+async def get_observacoes(id: int):
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM OBSERVACOES WHERE id=%s", (id,))
+        observacoes = await cursor.fetchone()
+        if observacoes:
+            return {"id": observacoes[0], "data_observacoes": observacoes[1], "conteudo": observacoes[2], "matricula": observacoes[3]}
+        else:
+            raise HTTPException(status_code=404, detail="Observacoes not found")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
+
