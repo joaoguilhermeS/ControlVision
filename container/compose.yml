@@ -1,0 +1,88 @@
+  version: '3.7'
+
+  services:
+    agent:
+      image: portainer/agent:latest
+      environment:
+        AGENT_CLUSTER_ADDR: tasks.agent
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /var/lib/docker/volumes:/var/lib/docker/volumes
+      networks:
+        - agent_network
+      deploy:
+        mode: global
+
+    portainer:
+      image: portainer/portainer-ce:latest
+      command: -H tcp://tasks.agent:9001 --tlsskipverify
+      ports:
+        - "9000:9000"
+        - "8000:8000"
+      volumes:
+        - ../container/portainer_data:/data
+      networks:
+        - agent_network
+      deploy:
+        mode: replicated
+        replicas: 1
+        placement:
+          constraints: [node.role == manager]
+
+    grafana:
+      image: grafana/grafana:7.5.7
+      ports:
+        - "3000:3000"
+      networks:
+        - agent_network
+      volumes:
+        - ../db/grafana-data:/var/lib/grafana
+      environment:
+        GF_SECURITY_ADMIN_PASSWORD: "123"
+      deploy:
+        replicas: 1
+        restart_policy:
+          condition: on-failure
+      
+    mysql:
+      image: mysql:5.7  # You can use mysql:latest if you prefer the latest version
+      environment:
+        MYSQL_ROOT_PASSWORD: A06£6cG@tp.*
+        MYSQL_DATABASE: ControlVision
+      volumes:
+        - ../db/mysql-data:/var/lib/mysql
+        - ../db/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      networks:
+        - agent_network
+      deploy:
+        replicas: 1
+        placement:
+          constraints: [node.role == manager]
+        restart_policy:
+          condition: on-failure
+  
+
+    controlvision-back:
+      image: control-vision:dev
+      volumes:
+        - ../backend/api.py:/app/main.py
+        - ../backend/.env:/app/.env
+      ports:
+        - "8080:8080"
+      networks:
+        - agent_network
+      deploy:
+        mode: replicated
+        replicas: 1
+        update_config:
+          order: start-first
+        restart_policy:
+          condition: on-failure
+
+  networks:
+    agent_network:
+      driver: overlay
+
+  volumes:
+    portainer_data:
+    grafana-data:
