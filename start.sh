@@ -8,4 +8,4 @@ docker stack deploy -c ./container/compose.yml stack
 # docker service inspect --pretty [SERVICE_NAME]
 # mysql -u root -p ControlVision < /docker-entrypoint-initdb.d/init-db.sql
 # mysql -u root -p ControlVision
-# GRANT ALL PRIVILEGES ON ControlVision.* TO 'root'@'10.0.1.4' IDENTIFIED BY 'A06£6cG@tp.*'; FLUSH PRIVILEGES;
+# GRANT ALL PRIVILEGES ON ControlVision.* TO 'root'@'%' IDENTIFIED BY 'A06£6cG@tp.*'; FLUSH PRIVILEGES;
