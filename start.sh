@@ -1,5 +1,5 @@
 docker swarm leave --force
-docker swarm init --advertise-addr 192.168.146.164
+docker swarm init --advertise-addr 10.0.1.4
 docker stack deploy -c ./container/compose.yml stack
 # docker service logs prometheus_mysql -f
 # docker service update --force prometheus_mysql

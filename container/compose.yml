@@ -49,7 +49,6 @@
       environment:
         MYSQL_ROOT_PASSWORD: A06£6cG@tp.*
         MYSQL_DATABASE: ControlVision
-        MYSQL_ROOT_HOST: '%'
       volumes:
         - ../db/mysql-data:/var/lib/mysql
         - ../db/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
@@ -62,7 +61,6 @@
         restart_policy:
           condition: on-failure
   
-
     controlvision-back:
       image: control-vision:dev
       volumes:

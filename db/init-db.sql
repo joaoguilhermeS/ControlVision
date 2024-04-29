@@ -24,7 +24,7 @@ CREATE TABLE USUARIO (
 
 CREATE TABLE INFO_PRODUTIVIDADE (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    data TIMESTAMP,
+    data_produtividade TIMESTAMP,
     lista_de_produtividade TEXT,
     matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
@@ -32,7 +32,7 @@ CREATE TABLE INFO_PRODUTIVIDADE (
 
 CREATE TABLE OBSERVACOES (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    data TIMESTAMP,
+    data_observacoes TIMESTAMP,
     conteudo TEXT,
     matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
@@ -41,7 +41,7 @@ CREATE TABLE OBSERVACOES (
 CREATE TABLE PRODUCAO (
     id INT AUTO_INCREMENT PRIMARY KEY,
     tipo INTEGER,
-    data TIMESTAMP,
+    data_producao TIMESTAMP,
     quantidade INTEGER,
     matricula INT NOT NULL,
     FOREIGN KEY (matricula) REFERENCES USUARIO(matricula)
@@ -55,7 +55,7 @@ CREATE TABLE VPS (
 
 CREATE TABLE MANUTENCAO (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    data TIMESTAMP,
+    data_de_manuntencao TIMESTAMP,
     descricao VARCHAR(255),
     id_rsa VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_rsa) REFERENCES VPS(id_rsa)
@@ -94,7 +94,7 @@ CREATE TABLE SENSOR (
 
 CREATE TABLE ALARME (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    data TIMESTAMP,
+    data_do_alarme TIMESTAMP,
     tipo VARCHAR(255),
     texto VARCHAR(255),
     id_dispositivo INT NOT NULL,

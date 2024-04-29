@@ -7,7 +7,7 @@ import os
 from fastapi.openapi.utils import get_openapi
 from cryptography.fernet import Fernet
 import jwt
-import jwt
+import jwt  
 import aiomysql
 import asyncio
 from dotenv import load_dotenv
@@ -22,14 +22,11 @@ from openai import OpenAI
 import requests
 import json
 
-
 client = OpenAI(api_key='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')
-
 
 number_of_workers = int(os.environ.get("N_WORKERS", 1))
 
 app = FastAPI()
-
 
 def custom_openapi():
     # Generate a Fernet key from the provided string (not secure, just for example)
@@ -673,8 +670,6 @@ async def delete_alarme(id: int):
     #         await conn.close()
     return {"message": "Alarme deleted successfully!"}
 
-if __name__ == '__main__':
-    uvicorn.run("main:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.get("/get-usuario/{matricula}")
 async def get_usuario(matricula: int):
     conn = None
@@ -690,11 +685,11 @@ async def get_usuario(matricula: int):
             raise HTTPException(status_code=404, detail="Usuario not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-info-produtividade/{id}")
 async def get_info_produtividade(id: int):
@@ -711,11 +706,11 @@ async def get_info_produtividade(id: int):
             raise HTTPException(status_code=404, detail="InfoProdutividade not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-observacoes/{id}")
 async def get_observacoes(id: int):
@@ -732,11 +727,11 @@ async def get_observacoes(id: int):
             raise HTTPException(status_code=404, detail="Observacoes not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-producao/{id}")
 async def get_producao(id: int):
@@ -753,11 +748,11 @@ async def get_producao(id: int):
             raise HTTPException(status_code=404, detail="Producao not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-vps/{ip}")
 async def get_vps(ip: str):
@@ -774,11 +769,11 @@ async def get_vps(ip: str):
             raise HTTPException(status_code=404, detail="VPS not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-manutencao/{id}")
 async def get_manutencao(id: int):
@@ -795,11 +790,11 @@ async def get_manutencao(id: int):
             raise HTTPException(status_code=404, detail="Manutencao not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-desenvolvedor/{id_rsa}")
 async def get_desenvolvedor(id_rsa: str):
@@ -816,11 +811,11 @@ async def get_desenvolvedor(id_rsa: str):
             raise HTTPException(status_code=404, detail="Desenvolvedor not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-dispositivos/{id}")
 async def get_dispositivos(id: int):
@@ -837,11 +832,11 @@ async def get_dispositivos(id: int):
             raise HTTPException(status_code=404, detail="Dispositivos not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-camera/{id}")
 async def get_camera(id: int):
@@ -858,11 +853,11 @@ async def get_camera(id: int):
             raise HTTPException(status_code=404, detail="Camera not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-sensor/{id}")
 async def get_sensor(id: int):
@@ -879,11 +874,11 @@ async def get_sensor(id: int):
             raise HTTPException(status_code=404, detail="Sensor not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
 
 @app.get("/get-alarme/{id}")
 async def get_alarme(id: int):
@@ -900,8 +895,11 @@ async def get_alarme(id: int):
             raise HTTPException(status_code=404, detail="Alarme not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    # finally:
+    #     if cursor:
+    #         await cursor.close()
+    #     if conn:
+    #         await conn.close()
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
