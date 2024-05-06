@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema Supervisório</title>
+    <style>
+        body {
+            background-color: #cfcfcf; /* Cor de fundo cinza */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #loginForm {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+            border-radius: 8px; /* Cantos arredondados */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type=text], input[type=password], input[type=button] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px; /* Cantos arredondados nos campos e botões */
+            box-sizing: border-box;
+        }
+        input[type=button] {
+            background-color: #e8e8e8; /* Cor do botão */
+            border: 1px solid #000; /* Contorno preto */
+            cursor: pointer;
+        }
+        input[type=button]:hover {
+            background-color: #d8d8d8;
+        }
+        #logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 50%; /* Ajuste conforme necessário */
+        }
+        .forgot-password {
+            text-align: center;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginForm">
+        <img id="logo" src="/home/joao/ufpb/ControlVision/frontend/assets/login/icone_senha-removebg-preview.png" alt="Logo">
+        <form>
+            <label for="username">Usuário:</label><br>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Senha:</label><br>
+            <input type="password" id="password" name="password" required><br>
+            <input type="button" value="Entrar" onclick="login()">
+            <p class="forgot-password"><a href="#">Esqueci a Senha</a></p>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function login() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            
+            fetch('https://your-api-url.com/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({username: username, password: password})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/dashboard'; // Redireciona para a dashboard se o login for bem-sucedido
+                } else {
+                    document.getElementById('message').innerText = 'Login falhou! Verifique suas credenciais.';
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                document.getElementById('message').innerText = 'Erro ao conectar ao servidor.';
+            });
+        }
+    </script>
+</body>
+</html>
