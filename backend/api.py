@@ -1006,14 +1006,15 @@ async def get_todays_production_sum_per_item():
 temperatura = 0
 
 @app.post("/set-temperatura")
-async def get_current_temperatura(payload: dict):
+async def set_current_temperatura(payload: dict):
     try:
-        temperatura = payload['temperatura']
+        global temperatura
+        temperatura = int(payload['temperatura'])
     except:
         temperatura = random.randint(18, 30) 
 
 @app.get("/get-temperatura")
-async def get_current_temperatura():
+async def get_current_temperatura() -> dict:
     global temperatura
     return {"temperatura": temperatura}    
 
