@@ -102,10 +102,9 @@
             fetch('http://172.203.231.235:8080/login', {  // Corrected URL to match the API endpoint
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                 },
-                body: new URLSearchParams({username: username, password: password})
+                body: new FormData(document.querySelector('form'))
             })
             .then(response => response.json())
             .then(data => {
