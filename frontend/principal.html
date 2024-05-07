@@ -109,12 +109,8 @@
     <div class="section">
         <div class="ranking">
             <h2>Ranking de Produtividade</h2>
-            <ol>
-                <li>Luiza - 30 frutas</li>
-                <li>Amanda - 28 frutas</li>
-                <li>Luan - 25 frutas</li>
-                <li>João - 23 frutas</li>
-                <li>Gabriel - 21 frutas</li>
+            <ol id="productivityRanking">
+                <!-- Fetched productivity rankings will be listed here -->
             </ol>
         </div>
         <div class="total-produced">
@@ -161,7 +157,7 @@
                             break;
                     }
                     alarmDiv.className = alarmClass;
-                    alarmDiv.textContent = `${alarm[0]} - ${alarm[3]}`; // Corrected to include the alarm ID and message
+                    alarmDiv.textContent = `${alarm[0]} - ${alarm[3]}`;
                     alarmsContainer.appendChild(alarmDiv);
                 });
             } else {
@@ -187,6 +183,20 @@
             }
         })
         .catch(error => console.error('Error fetching observations:', error));
+
+        // Fetch productivity data and update ranking
+        fetch('http://172.203.231.235:8080/get-todays-production-sum-per-user')
+        .then(response => response.json())
+        .then(data => {
+            const ranking = document.getElementById('productivityRanking');
+            const productionSums = data.production_sums;
+            Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `${user} - ${productionSums[user]} frutas`;
+                ranking.appendChild(li);
+            });
+        })
+        .catch(error => console.error('Error fetching productivity:', error));
     });
 </script>
 </body>
