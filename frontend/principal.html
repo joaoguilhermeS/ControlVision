@@ -130,7 +130,22 @@
             if (data.alarmes && data.alarmes.length > 0) {
                 data.alarmes.forEach(alarm => {
                     const alarmDiv = document.createElement('div');
-                    alarmDiv.className = 'alarm';
+                    let alarmClass = 'alarm';
+                    switch(alarm[2]) {
+                        case '1':
+                            alarmClass += ' red';
+                            break;
+                        case '2':
+                            alarmClass += ' yellow';
+                            break;
+                        case '3':
+                            alarmClass += ' green';
+                            break;
+                        default:
+                            alarmClass += ' default';
+                            break;
+                    }
+                    alarmDiv.className = alarmClass;
                     alarmDiv.textContent = `${alarm[0]} - ${alarm[3]}`; // Corrected to include the alarm ID and type
                     alarmsContainer.appendChild(alarmDiv);
                 });
@@ -143,3 +158,9 @@
 </script>
 </body>
 </html>
+<style>
+.alarm.red { color: red; }
+.alarm.yellow { color: yellow; }
+.alarm.green { color: green; }
+.alarm.default { color: black; }
+</style>
