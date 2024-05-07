@@ -1050,12 +1050,12 @@ async def check_and_create_alarme(temperatura):
     if tipo:
         existing_alarm = await check_existing_alarm(tipo)
         if not existing_alarm:
-        await create_alarme({
-            'data_do_alarme': datetime.now(),
-            'tipo': tipo,
-            'texto': f'Temperatura crítica: {temperatura}°C',
-            'id_dispositivo': 1 
-        })
+            await create_alarme({
+                'data_do_alarme': datetime.now(),
+                'tipo': tipo,
+                'texto': f'Temperatura crítica: {temperatura}°C',
+                'id_dispositivo': 1 
+            })
 
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
