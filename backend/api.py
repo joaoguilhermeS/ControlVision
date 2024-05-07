@@ -964,16 +964,17 @@ async def get_todays_production_sum_per_user():
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("SELECT matricula, quantidade, data_producao FROM PRODUCAO")
+        await cursor.execute("SELECT PRODUCAO.matricula, USUARIO.nome, PRODUCAO.quantidade, PRODUCAO.data_producao FROM PRODUCAO JOIN USUARIO ON PRODUCAO.matricula = USUARIO.matricula")
         raw_data = await cursor.fetchall()
         today = date.today()
+        filtered_data = [data for data in raw_data if data[3].date() == today]
         filtered_data = [data for data in raw_data if data[2].date() == today]
         production_sums = {}
-        for matricula, quantidade, _ in filtered_data:
+        for matricula, nome, quantidade, _ in filtered_data:
             if matricula in production_sums:
-                production_sums[matricula] += quantidade
+                production_sums[nome] += quantidade
             else:
-                production_sums[matricula] = quantidade
+                production_sums[nome] = quantidade
         return {"production_sums": production_sums}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
