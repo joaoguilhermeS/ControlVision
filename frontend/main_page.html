@@ -59,11 +59,13 @@
     input[type="submit"]:hover, button:hover {
         background-color: #45a049;
     }
-    .buttons-container > button {
-        flex: 1; /* Make buttons take equal space */
+    .buttons-container {
+        display: flex;
+        justify-content: space-around; /* Distribute buttons evenly and center */
     }
-    button.save {
-        background-color: #f44336;
+    button {
+        flex-grow: 1; /* Allow buttons to grow and fill the container */
+        margin: 0 10px; /* Add some space between the buttons */
     }
 </style>
 </head>
