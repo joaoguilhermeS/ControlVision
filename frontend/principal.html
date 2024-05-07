@@ -196,19 +196,7 @@
         var constraints = {
             video: { deviceId: deviceId ? { exact: deviceId } : undefined }
         };
-        if (deviceId && deviceId !== '0') {
-            navigator.mediaDevices.getUserMedia(constraints)
-            .then(function(stream) {
-                video.srcObject = stream;
-                video.play();
-            })
-            .catch(function(err) {
-                console.error('Error accessing camera:', err);
-            });
-        } else {
-            video.srcObject = null;
-            video.pause();
-        }
+        navigator.mediaDevices.getUserMedia(constraints)
         .then(function(stream) {
             video.srcObject = stream;
         })
