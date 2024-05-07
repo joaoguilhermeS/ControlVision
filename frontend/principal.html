@@ -150,8 +150,11 @@
         </div>
     </div>
     <div class="section last-section">
-        <div class="camera-frame">
-            <span>Camera feed not available</span>
+        <div class="camera-frame" id="cameraFrame">
+            <video id="video1" width="100%" height="300" controls autoplay></video>
+            <select id="cameraSelect" onchange="changeCameraSource()">
+                <option value="0">Select Camera</option>
+            </select>
         </div>
         <div class="sensor-info">
             <img src="assets/login/sensor_indutivo.png" alt="Sensor de Contagem" class="sensor-icon">
@@ -165,6 +168,39 @@
 </div>
 
 <script>
+    function enumerateDevices() {
+        navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+            devices.forEach(function(device) {
+                if (device.kind === 'videoinput') {
+                    var option = document.createElement('option');
+                    option.value = device.deviceId;
+                    option.text = device.label || 'Camera ' + (cameraSelect.length);
+                    cameraSelect.appendChild(option);
+                }
+            });
+        })
+        .catch(function(err) {
+            console.error('Error enumerating devices:', err);
+        });
+    }
+
+    function changeCameraSource() {
+        var video = document.getElementById('video1');
+        var cameraSelect = document.getElementById('cameraSelect');
+        var deviceId = cameraSelect.value;
+        var constraints = {
+            video: { deviceId: deviceId ? { exact: deviceId } : undefined }
+        };
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(stream) {
+            video.srcObject = stream;
+        })
+        .catch(function(err) {
+            console.error('Error accessing camera:', err);
+        });
+    }
+
     function fetchData() {
         fetch('http://172.203.231.235:8080/get-temperatura')
         .then(response => response.json())
@@ -275,6 +311,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         fetchData();
         setInterval(fetchData, 10000); // Fetch data every 10 seconds
+        enumerateDevices();
     });
 </script>
 </body>
