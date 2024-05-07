@@ -168,6 +168,10 @@
 </div>
 
 <script>
+    function getDeviceLabel(device) {
+        return device.label || `Camera ${document.getElementById('cameraSelect').length + 1}`;
+    }
+
     function enumerateDevices() {
         navigator.mediaDevices.enumerateDevices()
         .then(function(devices) {
@@ -175,7 +179,7 @@
                 if (device.kind === 'videoinput') {
                     var option = document.createElement('option');
                     option.value = device.deviceId;
-                    option.text = device.label || 'Camera ' + (cameraSelect.length);
+                    option.text = getDeviceLabel(device);
                     cameraSelect.appendChild(option);
                 }
             });
