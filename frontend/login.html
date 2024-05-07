@@ -99,7 +99,7 @@
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
 
-            fetch('/login', {
+            fetch('/api/login', {  // Assuming the backend is served at /api
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

@@ -36,8 +36,10 @@
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0,0,0,0.1);
         margin: 20px;
+        width: calc(100% - 40px); /* Adjust width */
+        box-sizing: border-box;
     }
-    select, input[type="text"] {
+    select, input[type="number"] {
         width: 100%;
         padding: 10px;
         margin: 10px 0;
@@ -46,37 +48,25 @@
         border-radius: 4px;
         box-sizing: border-box;
     }
-    input[type="submit"], button {
-        width: 48%;
-        background-color: #4CAF50;
-        color: white;
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-    input[type="submit"]:hover, button:hover {
-        background-color: #45a049;
-    }
-    .buttons-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
-    button.cancel {
-        background-color: #f44336; /* Change Cancel button to red */
-    }
-    button.save {
-        background-color: #4CAF50; /* Ensure Save button is green */
-    }
     .buttons-container {
         display: flex;
-        justify-content: center; /* Center buttons horizontally */
-        align-items: center; /* Center buttons vertically */
+        gap: 10px;
     }
-    .buttons-container button {
-        padding: 14px 20px; /* Standardize padding for buttons */
+    button {
+        flex-grow: 1;
+        padding: 10px 20px; /* Standardize padding for buttons */
+        font-size: 16px; /* Increase font size */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button.cancel {
+        background-color: #ff4444; /* Brighter red */
+        color: white;
+    }
+    button.save {
+        background-color: #00C851; /* Brighter green */
+        color: white;
     }
 </style>
 </head>
@@ -88,24 +78,25 @@
     <a href="#alarms">Alarmes</a>
     <a href="#report">Relatório</a>
     <a href="#maintenance">Manutenção</a>
-    <div class="role"><img src="/home/joao/ufpb/ControlVision/frontend/assets/login/icone_senha-removebg-preview.png" alt="Profile" style="width: 20px; vertical-align: middle;"> Gerente</div>
+    <div class="role">Perfil Gerente</div>
 </div>
 
 <div class="container">
     <h2>Cadastrar Valor de Limiar</h2>
     <form action="/submit-form" method="post">
-        <label for="device">Dispositivo:</label>
-        <label for="device" style="font-weight: bold;">Dispositivo:</label>
-        <select id="device" name="device" required>
+        <label for="device"><strong>Dispositivo:</strong></label>
+        <select id="device" name="device">
             <option>Sensor</option>
             <option>Câmera</option>
         </select>
 
-        <label for="threshold" style="font-weight: bold;">Novo Valor de Limiar:</label><br>
-        <input type="number" id="threshold" name="threshold" placeholder="Enter a real value for the threshold" min="0" step="any" required>
+        <label for="threshold"><strong>Novo Valor de Limiar:</strong></label>
+        <input type="number" id="threshold" name="threshold" placeholder="Digite o valor desejado" min="0" step="any" required>
 
-        <button type="submit">Salvar</button>
-        <button type="button" class="cancel">Cancelar</button>
+        <div class="buttons-container">
+            <button type="submit" class="save">Salvar</button>
+            <button type="button" class="cancel">Cancelar</button>
+        </div>
     </form>
 </div>
 

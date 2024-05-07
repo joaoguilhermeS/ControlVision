@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervisory System - Fruit Production Monitoring</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 0;
+        margin: 0;
+    }
+    .topnav {
+        background-color: #333;
+        overflow: hidden;
+        color: white;
+        padding: 10px 20px;
+    }
+    .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    .topnav .role {
+        float: right;
+        color: #f2f2f2;
+        padding: 14px 16px;
+    }
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        margin: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+    }
+    .section {
+        flex: 1;
+        margin-right: 20px;
+    }
+    .last-section {
+        margin-right: 0;
+    }
+    .alarms, .observations, .ranking, .total-produced {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+    }
+    .alarm {
+        color: red;
+        margin-bottom: 5px;
+    }
+    .sensor-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+    .sensor-icon {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+    <a href="#home">Início</a>
+    <a href="#settings">Configurações</a>
+    <a href="#alarms">Alarmes</a>
+    <a href="#report">Relatório</a>
+    <a href="#maintenance">Manutenção</a>
+    <div class="role">Anônimo</div>
+</div>
+
+<div class="container">
+    <div class="section">
+        <div class="alarms">
+            <h2>Alarmes</h2>
+            <div class="alarm">Sensor X excedeu 30 graus</div>
+            <div class="alarm">Sensor X excedeu 30 graus</div>
+            <div class="alarm">Sensor X excedeu 30 graus</div>
+        </div>
+        <div class="observations">
+            <h2>Observações</h2>
+            <input type="checkbox"> O funcionário x passou mal<br>
+            <input type="checkbox"> A máquina Y parou
+        </div>
+    </div>
+    <div class="section">
+        <div class="ranking">
+            <h2>Ranking de Produtividade</h2>
+            <ol>
+                <li>Luiza - 30 frutas</li>
+                <li>Amanda - 28 frutas</li>
+                <li>Luan - 25 frutas</li>
+                <li>João - 23 frutas</li>
+                <li>Gabriel - 21 frutas</li>
+            </ol>
+        </div>
+        <div class="total-produced">
+            <h2>Total Produzido</h2>
+            <p>Uvas verdes: 22 Caixas</p>
+            <p>Uvas roxas: 13 Caixas</p>
+        </div>
+    </div>
+    <div class="section last-section">
+        <img src="fakepath/camera_view.jpg" alt="Câmera X" style="width:100%; height: auto; margin-bottom: 20px;">
+        <div class="sensor-info">
+            <img src="fakepath/sensor_icon.jpg" alt="Sensor de Contagem" class="sensor-icon">
+            <p>Ligado</p>
+        </div>
+        <div class="sensor-info">
+            <img src="fakepath/temperature_icon.jpg" alt="Temperatura ambiente" class="sensor-icon">
+            <p>33.13 °C</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

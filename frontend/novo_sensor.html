@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register New Sensor</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 0;
+        margin: 0;
+    }
+    .topnav {
+        background-color: #333;
+        overflow: hidden;
+        color: white;
+        padding: 10px 20px;
+    }
+    .topnav a {
+        float: left;
+        color: #f2f2f2;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    .topnav .role {
+        float: right;
+        color: #f2f2f2;
+        padding: 14px 16px;
+    }
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        margin: 20px;
+        width: calc(100% - 40px); /* Adjust width */
+        box-sizing: border-box;
+    }
+    input[type="text"], select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .buttons-container {
+        display: flex;
+        gap: 10px;
+    }
+    button {
+        flex-grow: 1;
+        padding: 10px 20px; /* Standardize padding for buttons */
+        font-size: 16px; /* Increase font size */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button.cancel {
+        background-color: #ff4444; /* Brighter red */
+        color: white;
+    }
+    button.save {
+        background-color: #00C851; /* Brighter green */
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<div class="topnav">
+    <a href="#home">Início</a>
+    <a href="#settings">Configurações</a>
+    <a href="#alarms">Alarmes</a>
+    <a href="#report">Relatório</a>
+    <a href="#maintenance">Manutenção</a>
+    <div class="role">Perfil Gerente</div>
+</div>
+
+<div class="container">
+    <h2>Cadastrar Novo Sensor</h2>
+    <form action="/submit-sensor" method="post">
+        <label for="nickname"><strong>Apelido:</strong></label>
+        <input type="text" id="nickname" name="nickname" placeholder="Sensor Indutivo" required>
+
+        <label for="url"><strong>URL:</strong></label>
+        <input type="text" id="url" name="url" placeholder="api.com/indutivo1" required>
+
+        <label for="database"><strong>Banco de dados:</strong></label>
+        <select id="database" name="database" required>
+            <option disabled selected>selecione o banco de dados que deseja-se salvar os dados</option>
+            <option value="db1">Database 1</option>
+            <option value="db2">Database 2</option>
+        </select>
+
+        <div class="buttons-container">
+            <button type="submit" class="save">Salvar</button>
+            <button type="button" class="cancel">Cancelar</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
