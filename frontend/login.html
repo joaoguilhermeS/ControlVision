@@ -6,7 +6,6 @@
     <title>Login - Sistema Supervisório</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
             background-color: #cfcfcf; /* Cor de fundo cinza */
             font-family: Arial, sans-serif;
@@ -16,109 +15,95 @@
             height: 100vh;
             margin: 0;
         }
-        #loginForm {
+        #loginFormBox {
             background-color: #ffffff;
             width: 100%;
-            max-width: 300px;
-            max-width: 400px; /* Further increased max-width for a larger white box */
-            padding: 5%; /* Responsive padding based on container width */
+            max-width: 400px; /* Definição de largura máxima */
+            padding: 5%; /* Acolchoamento responsivo baseado na largura do container */
             border-radius: 8px; /* Cantos arredondados */
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center; /* Center align the content */
+            text-align: center; /* Centraliza o conteúdo */
         }
         label {
             text-align: left;
             display: block;
             margin-top: 1em;
             font-family: 'Roboto', sans-serif;
-           font-weight: bold; /* Make label text bold */
+            font-weight: bold; /* Texto da etiqueta em negrito */
         }
-        input[type=text], input[type=password], input[type=button] {
+        input[type=text], input[type=password], input[type=submit] {
             width: 100%;
             padding: 1em;
-            margin: 0.5em 0; /* Reduced margin for less space between input boxes */
+            margin: 0.5em 0; /* Redução da margem para menos espaço entre as caixas de entrada */
             border: 1px solid #ccc;
             border-radius: 5px; /* Cantos arredondados nos campos e botões */
             box-sizing: border-box;
-            font-size: 1.1em; /* Larger font size for inputs and buttons */
+            font-size: 1.1em; /* Tamanho de fonte maior para entradas e botões */
         }
         #logo {
             display: block;
-            margin: 0 auto 20px; /* Center logo and add space below */
-            width: 80px; /* Make the logo a little bigger */
+            margin: 0 auto 20px; /* Centraliza o logo e adiciona espaço abaixo */
+            width: 80px; /* Torna o logo um pouco maior */
         }
         .buttons-container {
             display: flex;
-            justify-content: flex-start; /* Align buttons to the left */
+            justify-content: flex-start; /* Alinha botões à esquerda */
         }
-        .button{
+        .button {
             border: 3px solid #000; /* Borda preta mais grossa para todos os botões */
-            padding: 0.8em 1.2em; /* Larger padding for buttons */
-            font-size: 1.1em; /* Larger font size for buttons */
+            padding: 0.8em 1.2em; /* Acolchoamento maior para botões */
+            font-size: 1.1em; /* Tamanho de fonte maior para botões */
         }
-        .button, .button:first-child {
-            background-color: #e8e8e8; /* Cor do botão */
-            cursor: pointer;
-            display: inline-block; /* Adjust display for inline buttons */
-            margin-right: 0.5em; /* Adjusted margin for buttons */
+        .button:first-child {
+            margin-right: 0.5em; /* Margem ajustada para botões */
         }
         .button:hover {
-            background-color: #d8d8d8;
+            background-color: #d8d8d8; /* Mudança de cor ao passar o mouse */
         }
     </style>
 </head>
 <body>
-    <div id="loginForm">
-        <div style="text-align: center;">
-            <img id="logo" src="assets/login/icone_senha-removebg-preview.png" alt="Logo" style="width: 80px; margin-bottom: 20px;">
-            <h1>LOGIN</h1>
-        </div>
+    <div id="loginFormBox">
+        <img id="logo" src="assets/login/icone_senha-removebg-preview.png" alt="Logo" style="width: 80px; margin-bottom: 20px;">
+        <h1>LOGIN</h1>
         <h2>Sistema Supervisório - Monitoramento da Produção de Frutas</h2>
-            <form>
-                <label for="username">Usuário:</label><br>
-                <input type="text" id="username" name="username" required><br>
-                <label for="password">Senha:</label><br>
-                <input type="password" id="password" name="password" required><br>
-                <div class="buttons-container">
-                    <input type="button" class="button" value="Esqueci a Senha" onclick="forgotPassword()">
-                    <input type="button" class="button" value="Entrar" onclick="login()">
-                </div>
-            </form>
-        </div>
+        <form id="loginForm">
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required><br>
+            <div class="buttons-container">
+                <input type="button" class="button" value="Esqueci a Senha" onclick="forgotPassword()">
+                <input type="submit" class="button" value="Entrar">
+            </div>
+        </form>
         <p id="message"></p>
     </div>
     <script>
         function forgotPassword() {
-            // Implement the forgot password functionality here
-            alert('Forgot password functionality not implemented.');
+            alert('No momento apenas o supervisor pode registrar/modificar informações de acesso ao sistema.');
         }
-    </script>
 
-    <script>
-        function login() {
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-
-            fetch('http://172.203.231.235:8080/login', {  // Corrected URL to match the API endpoint
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('http://172.203.231.235:8080/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                body: new FormData(document.querySelector('form'))
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = 'principal.html'; // Redirect to principal.html if login is successful
+                    window.location.href = 'principal.html';
                 } else {
-                    alert('Login falhou! Verifique suas credenciais.'); // Alerta o usuário em caso de falha no login
+                    alert('Login falhou! Verifique suas credenciais.');
                 }
             })
             .catch((error) => {
                 console.error('Erro:', error);
-                alert('Erro ao conectar ao servidor.'); // Alerta o usuário em caso de erro de conexão
+                alert('Erro ao conectar ao servidor.');
             });
-        }
+        });
     </script>
 </body>
 </html>

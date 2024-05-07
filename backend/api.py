@@ -927,9 +927,6 @@ async def login(username: str = Form(...), password: str = Form(...)):
         if conn:
             await conn.close()
     
-
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.get("/get-all-alarmes")
 async def get_all_alarmes():
     conn = None
@@ -947,3 +944,6 @@ async def get_all_alarmes():
             await cursor.close()
         if conn:
             await conn.close()
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
