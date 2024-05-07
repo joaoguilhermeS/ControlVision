@@ -92,17 +92,18 @@
 </div>
 
 <div class="container">
-    <h2>Register Threshold Value</h2>
+    <h2>Cadastrar Valor de Limiar</h2>
     <form action="/submit-form" method="post">
-        <label for="device">Device:</label>
+        <label for="device">Dispositivo:</label>
         <select id="device" name="device">
-            <option>Select a Device</option>
+            <option>Sensor</option>
+            <option>Câmera</option>
         </select>
 
-        <label for="threshold">New Threshold Value:</label>
+        <label for="threshold">Novo Valor de Limiar:</label>
         <input type="text" id="threshold" name="threshold" placeholder="Enter a real value for the threshold">
 
-        <button type="submit">Save</button>
+        <button type="submit">Salvar</button>
         <button type="button" class="cancel">Cancelar</button>
     </form>
 </div>
