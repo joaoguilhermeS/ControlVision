@@ -18,24 +18,25 @@
             background-color: #ffffff;
             width: 100%;
             max-width: 300px;
-            max-width: 350px; /* Increased max-width for a larger white box */
-            padding: 5vw; /* Responsive padding based on viewport width */
+            max-width: 400px; /* Further increased max-width for a larger white box */
+            padding: 5%; /* Responsive padding based on container width */
             border-radius: 8px; /* Cantos arredondados */
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         input[type=text], input[type=password], input[type=button] {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 1em;
+            margin: 1em 0;
             border: 1px solid #ccc;
             border-radius: 5px; /* Cantos arredondados nos campos e botões */
             box-sizing: border-box;
+            font-size: 1.1em; /* Larger font size for inputs and buttons */
         }
         #logo {
             display: block;
             margin: 10px auto;
             margin: 10px 10px 10px 0;
-            width: 30px; /* Ajuste conforme necessário */
+            width: 50px; /* Larger logo */
         }
         .buttons-container {
             text-align: right;
@@ -44,12 +45,14 @@
         }
         .button{
             border: 3px solid #000; /* Borda preta mais grossa para todos os botões */
+            padding: 0.8em 1.2em; /* Larger padding for buttons */
+            font-size: 1.1em; /* Larger font size for buttons */
         }
         .button, .button:first-child {
             background-color: #e8e8e8; /* Cor do botão */
             cursor: pointer;
-            display: block;
-            margin-right: 20px; /* Adiciona margem à direita para o primeiro botão */
+            display: inline-block; /* Adjust display for inline buttons */
+            margin-right: 1em; /* Proportional margin for buttons */
         }
         .button:hover {
             background-color: #d8d8d8;
