@@ -901,19 +901,10 @@ async def get_alarme(id: int):
     #     if conn:
     #         await conn.close()
 
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.post("/login")
+@app.post("/login")
 async def login(username: str = Form(...), password: str = Form(...)):
-    # This is a placeholder for user authentication logic
-    # You should implement your database query here and check the credentials
-    if username == "admin" and password == "password":  # Replace with real validation
-        return {"success": True}
-    else:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+    # implement here
+    
 
-@app.get("/main")
-async def main():
-    # This is a placeholder for the main page after login
-    # You should implement your actual main page response here
-    return {"message": "Welcome to the main page!"}
-
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
