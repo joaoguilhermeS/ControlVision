@@ -100,12 +100,12 @@
                 if (data.success) {
                     window.location.href = '/dashboard'; // Redireciona para a dashboard se o login for bem-sucedido
                 } else {
-                    document.getElementById('message').innerText = 'Login falhou! Verifique suas credenciais.';
+                    alert('Login falhou! Verifique suas credenciais.'); // Alerta o usuário em caso de falha no login
                 }
             })
             .catch((error) => {
                 console.error('Erro:', error);
-                document.getElementById('message').innerText = 'Erro ao conectar ao servidor.';
+                alert('Erro ao conectar ao servidor.'); // Alerta o usuário em caso de erro de conexão
             });
         }
     </script>
