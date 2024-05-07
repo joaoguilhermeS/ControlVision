@@ -169,7 +169,8 @@
         fetch('http://172.203.231.235:8080/get-temperatura')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('temperatureDisplay').textContent = `Temperatura: ${data.temperatura} °C`;
+            const temperatureDisplay = document.getElementById('temperatureDisplay');
+            temperatureDisplay.textContent = `Temperatura: ${data.temperatura} °C`;
         })
         .catch(error => {
             console.error('Error fetching temperature:', error);
@@ -179,7 +180,8 @@
         fetch('http://172.203.231.235:8080/get-optico')
         .then(response => response.json())
         .then(data => {
-            document.getElementById('opticoDisplay').textContent = `Contagens: ${data.optico}`;
+            const opticoDisplay = document.getElementById('opticoDisplay');
+            opticoDisplay.textContent = `Contagens: ${data.optico}`;
         })
         .catch(error => {
             console.error('Error fetching optical count:', error);
@@ -191,6 +193,7 @@
         .then(response => response.json())
         .then(data => {
             const alarmsContainer = document.getElementById('alarmsList');
+        alarmsContainer.innerHTML = ''; // Clear existing alarms before adding new ones
             if (data.alarmes && data.alarmes.length > 0) {
                 data.alarmes.forEach(alarm => {
                     const alarmDiv = document.createElement('div');
@@ -224,6 +227,7 @@
         .then(response => response.json())
         .then(data => {
             const observationsContainer = document.getElementById('observationsList');
+        observationsContainer.innerHTML = ''; // Clear existing observations before adding new ones
             if (data.observacoes && data.observacoes.length > 0) {
                 data.observacoes.forEach(observation => {
                     const observationDiv = document.createElement('div');
@@ -242,6 +246,7 @@
         .then(response => response.json())
         .then(data => {
             const ranking = document.getElementById('productivityRanking');
+        ranking.innerHTML = ''; // Clear existing ranking before adding new ones
             const productionSums = data.production_sums;
             Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach(user => {
                 const li = document.createElement('li');
@@ -256,6 +261,7 @@
         .then(response => response.json())
         .then(data => {
             const totalProducedList = document.getElementById('totalProducedList');
+        totalProducedList.innerHTML = ''; // Clear existing production sums before adding new ones
             const productionSums = data.production_sums;
             Object.keys(productionSums).forEach(item => {
                 const li = document.createElement('li');
