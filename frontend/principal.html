@@ -159,27 +159,16 @@
             }
         })
         .catch(error => console.error('Error fetching alarms:', error));
-    });
-</script>
-</body>
-</html>
-    document.addEventListener('DOMContentLoaded', function() {
+
         fetch('http://172.203.231.235:8080/get-all-observacoes')
         .then(response => response.json())
         .then(data => {
             const observationsContainer = document.getElementById('observationsList');
             if (data.observacoes && data.observacoes.length > 0) {
+                data.observacoes.sort((a, b) => new Date(a[1]) - new Date(b[1]));
                 data.observacoes.forEach(observation => {
                     const observationDiv = document.createElement('div');
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = `obs-${observation[0]}`;
-                    checkbox.name = 'observation';
-                    const label = document.createElement('label');
-                    label.htmlFor = `obs-${observation[0]}`;
-                    label.textContent = observation[2]; // Assuming the content is at index 2
-                    observationDiv.appendChild(checkbox);
-                    observationDiv.appendChild(label);
+                    observationDiv.textContent = `${observation[1]} - ${observation[2]}`;
                     observationsContainer.appendChild(observationDiv);
                 });
             } else {
@@ -188,3 +177,6 @@
         })
         .catch(error => console.error('Error fetching observations:', error));
     });
+</script>
+</body>
+</html>
