@@ -110,7 +110,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = '/main'; // Redireciona para a main page se o login for bem-sucedido
+                    window.location.href = 'principal.html'; // Redirect to principal.html if login is successful
                 } else {
                     alert('Login falhou! Verifique suas credenciais.'); // Alerta o usuário em caso de falha no login
                 }
