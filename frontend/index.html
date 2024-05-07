@@ -42,12 +42,14 @@
             display: flex;
             justify-content: flex-end;
         }
-        .button {
+        .button{
+            border: 3px solid #000; /* Borda preta mais grossa para todos os botões */
+        }
+        .button, .button:first-child {
             background-color: #e8e8e8; /* Cor do botão */
-            border: 3px solid #000; /* Thicker black border for all buttons */
             cursor: pointer;
             display: block;
-            margin-right: 20px; /* Add right margin to the first button */
+            margin-right: 20px; /* Adiciona margem à direita para o primeiro botão */
         }
         .button:hover {
             background-color: #d8d8d8;
