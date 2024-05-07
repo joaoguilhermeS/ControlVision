@@ -38,20 +38,18 @@
         }
         .buttons-container {
             text-align: right;
+            display: flex;
+            justify-content: flex-end;
         }
         .button {
             background-color: #e8e8e8; /* Cor do botão */
             border: 1px solid #000; /* Contorno preto */
             cursor: pointer;
-            display: inline-block;
+            display: block;
             margin-left: 10px;
         }
         .button:hover {
             background-color: #d8d8d8;
-        }
-        .forgot-password {
-            display: inline-block;
-            font-size: 0.8em;
         }
     </style>
 </head>
@@ -65,7 +63,7 @@
                 <label for="password">Senha:</label><br>
                 <input type="password" id="password" name="password" required><br>
                 <div class="buttons-container">
-                    <input type="button" class="button forgot-password" value="Esqueci a Senha" onclick="forgotPassword()">
+                    <input type="button" class="button" value="Esqueci a Senha" onclick="forgotPassword()">
                     <input type="button" class="button" value="Entrar" onclick="login()">
                 </div>
             </form>
