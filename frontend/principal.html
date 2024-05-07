@@ -82,6 +82,21 @@
         height: 30px;
         margin-right: 10px;
     }
+    .ranking-item {
+        background-color: #e8e8e8;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .ranking-number {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #333;
+    }
 </style>
 </head>
 <body>
@@ -191,9 +206,20 @@
             const ranking = document.getElementById('productivityRanking');
             const productionSums = data.production_sums;
             Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach(user => {
-                const li = document.createElement('li');
-                li.textContent = `${user} - ${productionSums[user]} frutas`;
-                ranking.appendChild(li);
+            Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach((user, index) => {
+                const rankingItem = document.createElement('div');
+                rankingItem.className = 'ranking-item';
+                const numberSpan = document.createElement('span');
+                numberSpan.className = 'ranking-number';
+                numberSpan.textContent = `${index + 1}.`;
+                const userSpan = document.createElement('span');
+                userSpan.textContent = `${user}`;
+                const quantitySpan = document.createElement('span');
+                quantitySpan.textContent = `${productionSums[user]} frutas`;
+                rankingItem.appendChild(numberSpan);
+                rankingItem.appendChild(userSpan);
+                rankingItem.appendChild(quantitySpan);
+                ranking.appendChild(rankingItem);
             });
         })
         .catch(error => console.error('Error fetching productivity:', error));
