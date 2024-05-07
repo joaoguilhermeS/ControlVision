@@ -25,6 +25,7 @@ from datetime import date
 from fastapi import FastAPI, HTTPException
 import aiomysql
 from datetime import date, datetime
+import random
 
 client = OpenAI(api_key='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')
 
@@ -956,7 +957,6 @@ async def get_all_observacoes():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 @app.get("/get-todays-production-sum-per-user")
 async def get_todays_production_sum_per_user():
     conn = None
@@ -964,20 +964,22 @@ async def get_todays_production_sum_per_user():
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("SELECT PRODUCAO.matricula, USUARIO.nome, PRODUCAO.quantidade, PRODUCAO.data_producao FROM PRODUCAO JOIN USUARIO ON PRODUCAO.matricula = USUARIO.matricula")
-        raw_data = await cursor.fetchall()
-        today = date.today()
-        filtered_data = [data for data in raw_data if data[3].date() == today]
-        filtered_data = [data for data in raw_data if data[2].date() == today]
-        production_sums = {}
-        for matricula, nome, quantidade, _ in filtered_data:
-            if matricula in production_sums:
-                production_sums[nome] += quantidade
-            else:
-                production_sums[nome] = quantidade
-        return {"production_sums": production_sums}
+        # Update the SQL query to include the required columns in the GROUP BY clause or remove unnecessary columns
+        await cursor.execute("""
+            SELECT USUARIO.nome, SUM(PRODUCAO.quantidade) as total_producao
+            FROM PRODUCAO
+            JOIN USUARIO ON PRODUCAO.matricula = USUARIO.matricula
+            WHERE DATE(PRODUCAO.data_producao) = CURDATE()
+            GROUP BY USUARIO.nome
+        """)
+        production_sums = await cursor.fetchall()
+        # Map the results to a dictionary using the user's name as the key
+        result = {nome: total for nome, total in production_sums}
+        return {"production_sums": result}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
     
 @app.get("/get-todays-production-sum-per-item")
 async def get_todays_production_sum_per_item():
@@ -1000,6 +1002,20 @@ async def get_todays_production_sum_per_item():
         return {"production_sums": production_sums}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+temperatura = 0
+
+@app.post("/set-temperatura")
+async def get_current_temperatura(payload: dict):
+    try:
+        temperatura = payload['temperatura']
+    except:
+        temperatura = random.randint(18, 30) 
+
+@app.get("/get-temperatura")
+async def get_current_temperatura():
+    global temperatura
+    return {"temperatura": temperatura}    
 
 
 if __name__ == '__main__':
