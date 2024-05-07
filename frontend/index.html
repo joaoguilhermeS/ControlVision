@@ -24,6 +24,11 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center; /* Center align the content */
         }
+        label {
+            text-align: left;
+            display: block;
+            margin-top: 1em;
+        }
         input[type=text], input[type=password], input[type=button] {
             width: 100%;
             padding: 1em;
@@ -89,7 +94,7 @@
         function login() {
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
-            
+
             fetch('https://your-api-url.com/login', {
                 method: 'POST',
                 headers: {
