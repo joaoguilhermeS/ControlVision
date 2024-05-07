@@ -56,13 +56,12 @@
         margin-bottom: 10px;
         padding: 10px;
         border-radius: 8px;
-        color: white;
         font-weight: bold;
     }
-    .alarm.red { background-color: red; color: black; }
+    .alarm.red { background-color: red; color: white; }
     .alarm.yellow { background-color: yellow; color: black; }
-    .alarm.green { background-color: green; color: black; }
-    .alarm.default { background-color: grey; color: black; }
+    .alarm.green { background-color: green; color: white; }
+    .alarm.default { background-color: grey; color: white; }
     .sensor-info {
         display: flex;
         align-items: center;
@@ -153,7 +152,7 @@
                             break;
                     }
                     alarmDiv.className = alarmClass;
-                    alarmDiv.textContent = `${alarm[0]} - ${alarm[3]}`; // Corrected to include the alarm ID and type
+                    alarmDiv.textContent = `${alarm[0]} - ${alarm[3]}`; // Corrected to include the alarm ID and message
                     alarmsContainer.appendChild(alarmDiv);
                 });
             } else {
@@ -165,9 +164,3 @@
 </script>
 </body>
 </html>
-<style>
-.alarm.red { color: red; }
-.alarm.yellow { color: yellow; }
-.alarm.green { color: green; }
-.alarm.default { color: black; }
-</style>
