@@ -903,7 +903,29 @@ async def get_alarme(id: int):
 
 @app.post("/login")
 async def login(username: str = Form(...), password: str = Form(...)):
-    # implement here
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT senha FROM USUARIO WHERE usuario=%s", (username,))
+        result = await cursor.fetchone()
+        if result:
+            stored_password_encrypted = result[0]
+            stored_password = decrypt_password(stored_password_encrypted)
+            if password == stored_password:
+                return {"success": True, "message": "Login successful"}
+            else:
+                return {"success": False, "message": "Invalid password"}
+        else:
+            return {"success": False, "message": "User not found"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
     
 
 if __name__ == '__main__':
