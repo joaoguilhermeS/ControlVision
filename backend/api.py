@@ -967,7 +967,7 @@ async def get_todays_production_sum_per_user():
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
         today = date.today().isoformat()
-        await cursor.execute("SELECT matricula, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY matricula", (today,))
+        await cursor.execute("SELECT matricula, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY matricula", [today])
         production_sums = await cursor.fetchall()
         return {"production_sums": production_sums}
     except Exception as e:
@@ -984,7 +984,7 @@ async def get_todays_production_sum_per_item():
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
         today = date.today().isoformat()
-        await cursor.execute("SELECT tipo, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY tipo", (today,))
+        await cursor.execute("SELECT tipo, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY tipo", [today])
         production_sums = await cursor.fetchall()
         return {"production_sums": production_sums}
     except Exception as e:
