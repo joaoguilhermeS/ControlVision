@@ -60,15 +60,15 @@
         background-color: #45a049;
     }
     .buttons-container {
-        display: flex;
-        justify-content: space-around; /* Distribute buttons evenly and center */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
     button.cancel {
-        flex-grow: 1; /* Allow buttons to grow and fill the container */
-        margin: 0 10px; /* Add some space between the buttons */
+        background-color: #f44336; /* Change Cancel button to red */
     }
     button.save {
-        background-color: #4CAF50; /* Change Save button to green */
+        background-color: #4CAF50; /* Ensure Save button is green */
     }
     .buttons-container {
         display: flex;
@@ -76,8 +76,7 @@
         align-items: center; /* Center buttons vertically */
     }
     .buttons-container button {
-        margin: 0 10px; /* Add some space between the buttons */
-        flex: 1; /* Allow buttons to grow and fill the container */
+        padding: 14px 20px; /* Standardize padding for buttons */
     }
 </style>
 </head>
