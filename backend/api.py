@@ -980,3 +980,23 @@ async def get_todays_production_sum_per_user():
             await cursor.close()
         if conn:
             await conn.close()
+from datetime import date
+
+@app.get("/get-todays-production-sum-per-item")
+async def get_todays_production_sum_per_item():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        today = date.today().isoformat()
+        await cursor.execute("SELECT tipo, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY tipo", (today,))
+        production_sums = await cursor.fetchall()
+        return {"production_sums": production_sums}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
