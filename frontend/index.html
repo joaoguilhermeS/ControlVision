@@ -30,28 +30,47 @@
             border-radius: 5px; /* Cantos arredondados nos campos e botões */
             box-sizing: border-box;
         }
-        input[type=button] {
+        #logo {
+            float: left;
+            margin: 10px 10px 10px 0;
+            width: 30px; /* Ajuste conforme necessário */
+        }
+        .buttons-container {
+            text-align: right;
+        }
+        .button {
             background-color: #e8e8e8; /* Cor do botão */
             border: 1px solid #000; /* Contorno preto */
             cursor: pointer;
+            display: inline-block;
+            margin-left: 10px;
         }
-        input[type=button]:hover {
+        .button:hover {
             background-color: #d8d8d8;
         }
-        #logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 50%; /* Ajuste conforme necessário */
-        }
         .forgot-password {
-            text-align: center;
+            display: inline-block;
             font-size: 0.8em;
         }
     </style>
 </head>
 <body>
     <div id="loginForm">
-        <img id="logo" src="assets/login/icone_senha-removebg-preview.png" alt="Logo">
+        <div>
+            <img id="logo" src="assets/login/icone_senha-removebg-preview.png" alt="Logo">
+            <form>
+                <label for="username">Usuário:</label><br>
+                <input type="text" id="username" name="username" required><br>
+                <label for="password">Senha:</label><br>
+                <input type="password" id="password" name="password" required><br>
+                <div class="buttons-container">
+                    <p class="forgot-password"><a href="#">Esqueci a Senha</a></p>
+                    <input type="button" class="button" value="Entrar" onclick="login()">
+                </div>
+            </form>
+        </div>
+        <p id="message"></p>
+    </div>
         <form>
             <label for="username">Usuário:</label><br>
             <input type="text" id="username" name="username" required><br>
