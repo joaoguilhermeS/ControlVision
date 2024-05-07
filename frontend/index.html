@@ -31,7 +31,8 @@
             box-sizing: border-box;
         }
         #logo {
-            float: left;
+            display: block;
+            margin: 10px auto;
             margin: 10px 10px 10px 0;
             width: 30px; /* Ajuste conforme necessário */
         }
@@ -64,13 +65,19 @@
                 <label for="password">Senha:</label><br>
                 <input type="password" id="password" name="password" required><br>
                 <div class="buttons-container">
-                    <p class="forgot-password"><a href="#">Esqueci a Senha</a></p>
+                    <input type="button" class="button forgot-password" value="Esqueci a Senha" onclick="forgotPassword()">
                     <input type="button" class="button" value="Entrar" onclick="login()">
                 </div>
             </form>
         </div>
         <p id="message"></p>
     </div>
+    <script>
+        function forgotPassword() {
+            // Implement the forgot password functionality here
+            alert('Forgot password functionality not implemented.');
+        }
+    </script>
 
     <script>
         function login() {
