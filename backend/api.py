@@ -101,7 +101,7 @@ async def create_usuario(
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+
     return {"message": "Usuario created successfully!"}
 
 @app.put("/update-usuario/{matricula}")
@@ -622,7 +622,11 @@ async def delete_sensor(id: int):
     #         await conn.close()
     return {"message": "Sensor deleted successfully!"}
 @app.post("/create-alarme")
-async def create_alarme(data_do_alarme: datetime = Form(...), tipo: str = Form(...), texto: str = Form(...), id_dispositivo: int = Form(...)):
+async def create_alarme(alarme_data: dict):
+    data_do_alarme = alarme_data['data_do_alarme']
+    tipo = alarme_data['tipo']
+    texto = alarme_data['texto']
+    id_dispositivo = alarme_data['id_dispositivo']
     conn = None
     cursor = None
     try:
@@ -980,7 +984,7 @@ async def get_todays_production_sum_per_user():
         raise HTTPException(status_code=400, detail=str(e))
 
 
-    
+
 @app.get("/get-todays-production-sum-per-item")
 async def get_todays_production_sum_per_item():
     conn = None
@@ -1010,6 +1014,7 @@ async def set_current_temperatura(payload: dict):
     try:
         global temperatura
         temperatura = int(payload['temperatura'])
+        await check_and_create_alarme(temperatura)
     except:
         temperatura = random.randint(18, 30) 
 
@@ -1027,7 +1032,7 @@ async def set_current_optico(payload: dict):
         optico = int(payload['optico'])
     except:
         optico = random.randint(18, 30) 
-    
+
 @app.get("/get-optico")
 async def get_current_optico() -> dict:
     global optico
@@ -1037,3 +1042,20 @@ async def get_current_optico() -> dict:
 
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+async def check_and_create_alarme(temperatura):
+    tipo = None
+    if 25 < temperatura < 30:
+        tipo = '3'
+    elif 30 <= temperatura < 35:
+        tipo = '2'
+    elif temperatura >= 35:
+        tipo = '1'
+
+    if tipo:
+        await create_alarme({
+            'data_do_alarme': datetime.now(),
+            'tipo': tipo,
+            'texto': f'Temperatura crítica: {temperatura}°C',
+            'id_dispositivo': 1  # Assuming a default device ID for demonstration
+        })
+
