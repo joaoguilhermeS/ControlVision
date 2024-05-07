@@ -960,3 +960,23 @@ async def get_all_observacoes():
 
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+from datetime import date
+
+@app.get("/get-todays-production-sum-per-user")
+async def get_todays_production_sum_per_user():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        today = date.today().isoformat()
+        await cursor.execute("SELECT matricula, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY matricula", (today,))
+        production_sums = await cursor.fetchall()
+        return {"production_sums": production_sums}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
