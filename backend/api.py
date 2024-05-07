@@ -957,10 +957,7 @@ async def get_all_observacoes():
         return {"observacoes": observacoes}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
-from datetime import date
+    
 
 @app.get("/get-todays-production-sum-per-user")
 async def get_todays_production_sum_per_user():
@@ -975,11 +972,8 @@ async def get_todays_production_sum_per_user():
         return {"production_sums": production_sums}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    
+
 from datetime import date
 
 @app.get("/get-todays-production-sum-per-item")
@@ -995,8 +989,8 @@ async def get_todays_production_sum_per_item():
         return {"production_sums": production_sums}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+    
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+from datetime import date
