@@ -21,6 +21,10 @@ from fastapi.responses import StreamingResponse
 from openai import OpenAI
 import requests
 import json
+from datetime import date
+from fastapi import FastAPI, HTTPException
+import aiomysql
+from datetime import date, datetime
 
 client = OpenAI(api_key='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')
 
@@ -905,14 +909,18 @@ async def get_alarme(id: int):
 async def login(username: str = Form(...), password: str = Form(...)):
     conn = None
     cursor = None
+    print("oi")
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
         await cursor.execute("SELECT senha FROM USUARIO WHERE usuario=%s", (username,))
+        print("antes...")
         result = await cursor.fetchone()
-        if result:
+        print(f"result = {result}")
+        if (1):
             stored_password_encrypted = result[0]
             stored_password = decrypt_password(stored_password_encrypted)
+            print(f"stored_password = {stored_password}")
             if password == stored_password:
                 return {"success": True, "message": "Login successful"}
             else:
@@ -921,12 +929,7 @@ async def login(username: str = Form(...), password: str = Form(...)):
             return {"success": False, "message": "User not found"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
-    
+
 @app.get("/get-all-alarmes")
 async def get_all_alarmes():
     conn = None
@@ -939,11 +942,6 @@ async def get_all_alarmes():
         return {"alarmes": alarmes}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
 
 @app.get("/get-all-observacoes")
 async def get_all_observacoes():
@@ -957,7 +955,7 @@ async def get_all_observacoes():
         return {"observacoes": observacoes}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+
 
 @app.get("/get-todays-production-sum-per-user")
 async def get_todays_production_sum_per_user():
@@ -966,16 +964,20 @@ async def get_todays_production_sum_per_user():
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        today = date.today().isoformat()
-        await cursor.execute("SELECT matricula, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY matricula", [today])
-        production_sums = await cursor.fetchall()
+        await cursor.execute("SELECT matricula, quantidade, data_producao FROM PRODUCAO")
+        raw_data = await cursor.fetchall()
+        today = date.today()
+        filtered_data = [data for data in raw_data if data[2].date() == today]
+        production_sums = {}
+        for matricula, quantidade, _ in filtered_data:
+            if matricula in production_sums:
+                production_sums[matricula] += quantidade
+            else:
+                production_sums[matricula] = quantidade
         return {"production_sums": production_sums}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-
-from datetime import date
-
 @app.get("/get-todays-production-sum-per-item")
 async def get_todays_production_sum_per_item():
     conn = None
@@ -983,14 +985,21 @@ async def get_todays_production_sum_per_item():
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        today = date.today().isoformat()
-        await cursor.execute("SELECT tipo, SUM(quantidade) as total_producao FROM PRODUCAO WHERE DATE(data_producao) = %s GROUP BY tipo", [today])
-        production_sums = await cursor.fetchall()
+        await cursor.execute("SELECT tipo, quantidade, data_producao FROM PRODUCAO")
+        raw_data = await cursor.fetchall()
+        print(f"raw_data = {raw_data}")
+        today = date.today()
+        filtered_data = [data for data in raw_data if data[2].date() == today]
+        production_sums = {}
+        for tipo, quantidade, _ in filtered_data:
+            if tipo in production_sums:
+                production_sums[tipo] += quantidade
+            else:
+                production_sums[tipo] = quantidade
         return {"production_sums": production_sums}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
+
 
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
-from datetime import date
