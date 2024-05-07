@@ -52,6 +52,14 @@
         background-color: #f0f0f0;
         border-radius: 5px;
     }
+    .observation {
+        background-color: #e8e8e8;
+        border: 1px solid #ccc;
+        padding: 8px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+        color: black; /* Ensuring text is visible */
+    }
     .alarm {
         margin-bottom: 10px;
         padding: 10px;
@@ -168,6 +176,7 @@
                 data.observacoes.sort((a, b) => new Date(a[1]) - new Date(b[1]));
                 data.observacoes.forEach(observation => {
                     const observationDiv = document.createElement('div');
+                    observationDiv.className = 'observation';
                     observationDiv.textContent = `${observation[1]} - ${observation[2]}`;
                     observationsContainer.appendChild(observationDiv);
                 });
