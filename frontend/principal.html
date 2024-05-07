@@ -93,7 +93,8 @@
         </div>
         <div class="observations">
             <h2>Observações</h2>
-            <div id="observationsList"></div>
+            <input type="checkbox"> O funcionário x passou mal<br>
+            <input type="checkbox"> A máquina Y parou
         </div>
     </div>
     <div class="section">
@@ -163,28 +164,3 @@
 </script>
 </body>
 </html>
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('http://172.203.231.235:8080/get-all-observacoes')
-        .then(response => response.json())
-        .then(data => {
-            const observationsContainer = document.getElementById('observationsList');
-            if (data.observacoes && data.observacoes.length > 0) {
-                data.observacoes.forEach(observation => {
-                    const observationDiv = document.createElement('div');
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = `obs-${observation[0]}`;
-                    checkbox.name = 'observation';
-                    const label = document.createElement('label');
-                    label.htmlFor = `obs-${observation[0]}`;
-                    label.textContent = observation[2]; // Assuming the content is at index 2
-                    observationDiv.appendChild(checkbox);
-                    observationDiv.appendChild(label);
-                    observationsContainer.appendChild(observationDiv);
-                });
-            } else {
-                observationsContainer.textContent = 'Nenhuma observação encontrada.';
-            }
-        })
-        .catch(error => console.error('Error fetching observations:', error));
-    });
