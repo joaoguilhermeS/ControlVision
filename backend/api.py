@@ -1038,10 +1038,6 @@ async def get_current_optico() -> dict:
     global optico
     return {"optico": optico}    
 
-
-
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 async def check_and_create_alarme(temperatura):
     tipo = None
     if 25 < temperatura < 30:
@@ -1056,6 +1052,10 @@ async def check_and_create_alarme(temperatura):
             'data_do_alarme': datetime.now(),
             'tipo': tipo,
             'texto': f'Temperatura crítica: {temperatura}°C',
-            'id_dispositivo': 1  # Assuming a default device ID for demonstration
+            'id_dispositivo': 1 
         })
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+
 
