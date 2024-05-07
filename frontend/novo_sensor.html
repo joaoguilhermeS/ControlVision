@@ -93,12 +93,12 @@
 <div class="container">
     <div class="form-container">
         <h2>CADASTRAR NOVO SENSOR</h2>
-        <form>
+        <form action="http://172.203.231.235:8080/create-sensor" method="post">
             <label for="nickname">Apelido:</label>
-            <input type="text" id="nickname" name="nickname" placeholder="Sensor Indutivo">
+            <input type="text" id="nickname" name="nome" placeholder="Sensor Indutivo">
 
             <label for="url">URL:</label>
-            <input type="text" id="url" name="url" placeholder="api.com/indutivo1">
+            <input type="text" id="url" name="ip" placeholder="api.com/indutivo1">
 
             <label for="database">Banco de dados:</label>
             <select id="database" name="database">
