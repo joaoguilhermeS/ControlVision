@@ -55,12 +55,12 @@
         border-radius: 5px;
     }
     .observation {
-        background-color: #f0f0f0; /* Lighter shade */
-        border: 1px solid #ddd; /* Lighter border */
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
         padding: 8px;
         margin-bottom: 5px;
         border-radius: 8px;
-        color: black; /* Ensuring text is visible */
+        color: black;
     }
     .alarm {
         margin-bottom: 10px;
@@ -78,24 +78,42 @@
         margin-bottom: 5px;
     }
     .sensor-icon {
-        width: 30px;
-        height: 30px;
+        width: 50px;
+        height: 50px;
         margin-right: 10px;
     }
-    .ranking-item {
-        background-color: #e8e8e8;
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 5px;
-        border-radius: 10px;
+    .ranking ol, .total-produced ul {
+        list-style: none;
+        padding: 0;
+    }
+    .ranking li, .total-produced li {
+        background-color: #e1f5fe;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        padding: 10px 20px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
     }
-    .ranking-number {
-        font-size: 1.2em;
+    .ranking li::before, .total-produced li::before {
+        content: counter(item) ". ";
+        counter-increment: item;
         font-weight: bold;
-        color: #333;
+        color: #0d47a1;
+        margin-right: 10px;
+        font-size: 16px;
+    }
+    .ranking, .total-produced {
+        counter-reset: item;
+    }
+    .camera-frame {
+        width: 100%;
+        height: 300px; /* Adjust height based on your needs */
+        background-color: #000;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
     }
 </style>
 </head>
@@ -124,24 +142,24 @@
     <div class="section">
         <div class="ranking">
             <h2>Ranking de Produtividade</h2>
-            <ol id="productivityRanking">
-                <!-- Fetched productivity rankings will be listed here -->
-            </ol>
+            <ol id="productivityRanking"></ol>
         </div>
         <div class="total-produced">
             <h2>Total Produzido</h2>
-            <p>Uvas verdes: 22 Caixas</p>
-            <p>Uvas roxas: 13 Caixas</p>
+            <ul id="totalProducedList"></ul>
         </div>
     </div>
     <div class="section last-section">
-        <img src="fakepath/camera_view.jpg" alt="Câmera X" style="width:100%; height: auto; margin-bottom: 20px;">
+        <div class="camera-frame">
+            <!-- Display camera image here -->
+            <span>Camera feed not available</span>
+        </div>
         <div class="sensor-info">
-            <img src="fakepath/sensor_icon.jpg" alt="Sensor de Contagem" class="sensor-icon">
+            <img src="assets/login/sensor_indutivo.png" alt="Sensor de Contagem" class="sensor-icon">
             <p>Ligado</p>
         </div>
         <div class="sensor-info">
-            <img src="fakepath/temperature_icon.jpg" alt="Temperatura ambiente" class="sensor-icon">
+            <img src="assets/login/sensor_temperatura.png" alt="Temperatura ambiente" class="sensor-icon">
             <p>33.13 °C</p>
         </div>
     </div>
@@ -149,6 +167,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Fetch all alarms
         fetch('http://172.203.231.235:8080/get-all-alarmes')
         .then(response => response.json())
         .then(data => {
@@ -181,12 +200,12 @@
         })
         .catch(error => console.error('Error fetching alarms:', error));
 
+        // Fetch all observations
         fetch('http://172.203.231.235:8080/get-all-observacoes')
         .then(response => response.json())
         .then(data => {
             const observationsContainer = document.getElementById('observationsList');
             if (data.observacoes && data.observacoes.length > 0) {
-                data.observacoes.sort((a, b) => new Date(a[1]) - new Date(b[1]));
                 data.observacoes.forEach(observation => {
                     const observationDiv = document.createElement('div');
                     observationDiv.className = 'observation';
@@ -199,30 +218,33 @@
         })
         .catch(error => console.error('Error fetching observations:', error));
 
-        // Fetch productivity data and update ranking
+        // Fetch productivity rankings
         fetch('http://172.203.231.235:8080/get-todays-production-sum-per-user')
         .then(response => response.json())
         .then(data => {
             const ranking = document.getElementById('productivityRanking');
             const productionSums = data.production_sums;
             Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach(user => {
-            Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach((user, index) => {
-                const rankingItem = document.createElement('div');
-                rankingItem.className = 'ranking-item';
-                const numberSpan = document.createElement('span');
-                numberSpan.className = 'ranking-number';
-                numberSpan.textContent = `${index + 1}.`;
-                const userSpan = document.createElement('span');
-                userSpan.textContent = `${user}`;
-                const quantitySpan = document.createElement('span');
-                quantitySpan.textContent = `${productionSums[user]} frutas`;
-                rankingItem.appendChild(numberSpan);
-                rankingItem.appendChild(userSpan);
-                rankingItem.appendChild(quantitySpan);
-                ranking.appendChild(rankingItem);
+                const li = document.createElement('li');
+                li.textContent = `${user} - ${productionSums[user]} frutas`;
+                ranking.appendChild(li);
             });
         })
         .catch(error => console.error('Error fetching productivity:', error));
+
+        // Fetch total production sums per item
+        fetch('http://172.203.231.235:8080/get-todays-production-sum-per-item')
+        .then(response => response.json())
+        .then(data => {
+            const totalProducedList = document.getElementById('totalProducedList');
+            const productionSums = data.production_sums;
+            Object.keys(productionSums).forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `Item ${item}: ${productionSums[item]} unidades`;
+                totalProducedList.appendChild(li);
+            });
+        })
+        .catch(error => console.error('Error fetching total produced:', error));
     });
 </script>
 </body>
