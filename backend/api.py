@@ -945,8 +945,6 @@ async def get_all_alarmes():
         if conn:
             await conn.close()
 
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.get("/get-all-observacoes")
 async def get_all_observacoes():
     conn = None
@@ -959,8 +957,6 @@ async def get_all_observacoes():
         return {"observacoes": observacoes}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
