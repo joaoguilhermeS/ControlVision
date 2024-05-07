@@ -63,9 +63,21 @@
         display: flex;
         justify-content: space-around; /* Distribute buttons evenly and center */
     }
-    button {
+    button.cancel {
         flex-grow: 1; /* Allow buttons to grow and fill the container */
         margin: 0 10px; /* Add some space between the buttons */
+    }
+    button.save {
+        background-color: #4CAF50; /* Change Save button to green */
+    }
+    .buttons-container {
+        display: flex;
+        justify-content: center; /* Center buttons horizontally */
+        align-items: center; /* Center buttons vertically */
+    }
+    .buttons-container button {
+        margin: 0 10px; /* Add some space between the buttons */
+        flex: 1; /* Allow buttons to grow and fill the container */
     }
 </style>
 </head>
