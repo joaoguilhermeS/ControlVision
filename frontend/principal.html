@@ -190,20 +190,27 @@
     }
 
     function changeCameraSource() {
-        var video = document.getElementById('video1');
-        var cameraSelect = document.getElementById('cameraSelect');
-        var deviceId = cameraSelect.value;
-        var constraints = {
-            video: { deviceId: deviceId ? { exact: deviceId } : undefined }
-        };
-        navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(stream) {
-            video.srcObject = stream;
-        })
-        .catch(function(err) {
-            console.error('Error accessing camera:', err);
-        });
+        const video = document.getElementById('video1');
+        const cameraSelect = document.getElementById('cameraSelect');
+        const deviceId = cameraSelect.value;
+        if (deviceId && deviceId !== '0') { // Ensure a valid device ID is selected
+            const constraints = {
+                video: { deviceId: { exact: deviceId } }
+            };
+            navigator.mediaDevices.getUserMedia(constraints)
+            .then(function(stream) {
+                video.srcObject = stream;
+                video.play().catch(e => console.error('Error trying to play video:', e));
+            })
+            .catch(function(err) {
+                console.error('Error accessing camera:', err);
+            });
+        } else {
+            video.srcObject = null;
+            console.log('No camera selected or invalid camera ID.');
+        }
     }
+}
 
     function fetchData() {
         fetch('http://172.203.231.235:8080/get-temperatura')
