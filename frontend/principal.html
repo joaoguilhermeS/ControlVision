@@ -121,21 +121,25 @@
     </div>
 </div>
 
-</body>
-</html>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('http://localhost:8080/get-all-alarmes')
+        fetch('http://172.203.231.235:8080/get-all-alarmes')
         .then(response => response.json())
         .then(data => {
             const alarmsContainer = document.getElementById('alarmsList');
-            data.alarmes.forEach(alarm => {
-                const alarmDiv = document.createElement('div');
-                alarmDiv.className = 'alarm';
-                alarmDiv.textContent = `${alarm.tipo} - ${alarm.texto}`;
-                alarmsContainer.appendChild(alarmDiv);
-            });
+            if (data.alarmes && data.alarmes.length > 0) {
+                data.alarmes.forEach(alarm => {
+                    const alarmDiv = document.createElement('div');
+                    alarmDiv.className = 'alarm';
+                    alarmDiv.textContent = `${alarm[2]} - ${alarm[3]}`; // Ajustado para usar índices de array
+                    alarmsContainer.appendChild(alarmDiv);
+                });
+            } else {
+                alarmsContainer.textContent = 'Nenhum alarme encontrado.';
+            }
         })
         .catch(error => console.error('Error fetching alarms:', error));
     });
 </script>
+</body>
+</html>
