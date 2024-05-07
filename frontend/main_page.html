@@ -60,18 +60,15 @@
         background-color: #45a049;
     }
     .buttons-container {
-        display: flex;
-        justify-content: space-evenly; /* Adjust buttons to be spaced evenly */
-    }
-    button.cancel, button.save {
-        width: auto; /* Adjust width to content */
-        flex-grow: 1; /* Allow buttons to grow equally */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
     button.cancel {
-        margin-right: 10px; /* Add margin to separate buttons */
+        background-color: #f44336; /* Change Cancel button to red */
     }
     button.save {
-        margin-left: 10px; /* Add margin to separate buttons */
+        background-color: #4CAF50; /* Ensure Save button is green */
     }
     .buttons-container {
         display: flex;
