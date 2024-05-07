@@ -99,7 +99,7 @@
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
 
-            fetch('/http://172.203.231.235:8080/login', {  // Assuming the backend is served at /api
+            fetch('http://172.203.231.235:8080/login', {  // Corrected URL to match the API endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
