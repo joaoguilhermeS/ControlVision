@@ -22,6 +22,7 @@
             padding: 5%; /* Responsive padding based on container width */
             border-radius: 8px; /* Cantos arredondados */
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center; /* Center align the content */
         }
         input[type=text], input[type=password], input[type=button] {
             width: 100%;
@@ -34,9 +35,8 @@
         }
         #logo {
             display: block;
-            margin: 10px auto;
-            margin: 10px 10px 10px 0;
-            width: 50px; /* Larger logo */
+            margin: 0 auto 20px; /* Center logo and add space below */
+            width: 80px; /* Make the logo a little bigger */
         }
         .buttons-container {
             display: flex;
@@ -60,6 +60,8 @@
 </head>
 <body>
     <div id="loginForm">
+        <h1>LOGIN</h1>
+        <h2>Sistema Supervisório - Monitoramento da Produção de Frutas</h2>
         <div>
             <img id="logo" src="assets/login/icone_senha-removebg-preview.png" alt="Logo">
             <form>
