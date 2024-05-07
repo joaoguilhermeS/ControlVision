@@ -1016,7 +1016,23 @@ async def set_current_temperatura(payload: dict):
 @app.get("/get-temperatura")
 async def get_current_temperatura() -> dict:
     global temperatura
-    return {"temperatura": temperatura}    
+    return {"temperatura": temperatura}
+
+optico = 0
+
+@app.post("/set-optico")
+async def set_current_optico(payload: dict):
+    try:
+        global optico
+        optico = int(payload['optico'])
+    except:
+        optico = random.randint(18, 30) 
+    
+@app.get("/get-optico")
+async def get_current_optico() -> dict:
+    global optico
+    return {"optico": optico}    
+
 
 
 if __name__ == '__main__':
