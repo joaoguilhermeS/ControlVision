@@ -59,7 +59,12 @@
     input[type="submit"]:hover, button:hover {
         background-color: #45a049;
     }
-    button.cancel {
+    .buttons-container {
+        display: flex;
+        justify-content: center; /* Center buttons horizontally */
+        align-items: center; /* Center buttons vertically */
+    }
+    button {
         background-color: #f44336;
     }
 </style>
@@ -87,7 +92,10 @@
         <input type="text" id="threshold" name="threshold" placeholder="Enter a real value for the threshold">
 
         <button type="submit">Save</button>
-        <button type="button" class="cancel">Cancel</button>
+        <div class="buttons-container">
+            <button type="submit">Salvar</button>
+            <button type="button" class="cancel">Cancelar</button>
+        </div>
     </form>
 </div>
 
