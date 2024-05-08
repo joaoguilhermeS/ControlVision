@@ -94,7 +94,11 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    window.location.href = 'principal.html';
+                    if (data.tipo_de_usuario === 'Gerente') {
+                        window.location.href = 'principal.html';
+                    } else {
+                        window.location.href = 'principal_convidados.html';
+                    }
                 } else {
                     alert('Login falhou! Verifique suas credenciais.');
                 }
