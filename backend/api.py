@@ -1054,8 +1054,6 @@ async def check_and_create_alarme(temperatura):
             'id_dispositivo': 1 
         })
 
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
 @app.get("/get-all-manutencoes")
 async def get_all_manutencoes():
     conn = None
@@ -1068,8 +1066,6 @@ async def get_all_manutencoes():
         return {"manutencoes": manutencoes}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
