@@ -96,7 +96,7 @@
         <input type="text" id="threshold" placeholder="um valor real com o limiar desejado">
         <div class="button-group">
             <input type="button" value="Cancelar" class="cancel">
-            <input type="button" value="Salvar" class="save" onclick="alert('Cadastrado com sucesso!');">
+            <input type="button" value="Salvar" class="save" onclick="saveThreshold();">
         </div>
     </form>
 </div>
@@ -123,3 +123,9 @@
 
 </body>
 </html>
+<script>
+function saveThreshold() {
+    alert('Cadastrado com sucesso!');
+    window.location.href = 'principal.html';
+}
+</script>
