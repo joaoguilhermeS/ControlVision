@@ -127,7 +127,22 @@
         alarmsDisplay.innerHTML = '';
         filteredAlarms.forEach(alarm => {
             const alarmDiv = document.createElement('div');
-            alarmDiv.className = `alarm ${alarm[2] === 'critical' ? 'critical' : 'non-critical'}`;
+            let alarmClass = 'alarm';
+            switch(alarm[2]) {
+                case '1':
+                    alarmClass += ' red';
+                    break;
+                case '2':
+                    alarmClass += ' yellow';
+                    break;
+                case '3':
+                    alarmClass += ' green';
+                    break;
+                default:
+                    alarmClass += ' default';
+                    break;
+            }
+            alarmDiv.className = alarmClass;
             alarmDiv.textContent = `${alarm[1]} - ${alarm[3]}`;
             alarmsDisplay.appendChild(alarmDiv);
         });
