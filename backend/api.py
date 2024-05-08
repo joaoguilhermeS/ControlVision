@@ -1056,3 +1056,20 @@ async def check_and_create_alarme(temperatura):
 
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+@app.get("/get-all-manutencoes")
+async def get_all_manutencoes():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM MANUTENCAO")
+        manutencoes = await cursor.fetchall()
+        return {"manutencoes": manutencoes}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
