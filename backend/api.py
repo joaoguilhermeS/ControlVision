@@ -1068,7 +1068,6 @@ async def get_all_manutencoes():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 @app.get("/get-graph-data")
 async def get_production_sum_per_item_per_day():
     conn = None
@@ -1087,9 +1086,7 @@ async def get_production_sum_per_item_per_day():
         return {"production_data": production_data}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    
-if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.get("/get-production-sum-per-item-per-day")
+
 
 @app.get("/get-all-cameras-and-sensors")
 async def get_all_cameras_and_sensors():
@@ -1105,8 +1102,7 @@ async def get_all_cameras_and_sensors():
         return {"cameras": cameras, "sensors": sensors}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
+
+
+if __name__ == '__main__':
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.get("/get-production-sum-per-item-per-day")

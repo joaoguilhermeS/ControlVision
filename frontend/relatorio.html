@@ -96,14 +96,14 @@
             labels: [],
             datasets: [
                 {
-                    label: 'Tipo 1',
+                    label: 'Fruta 1',
                     data: [],
                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 1
                 },
                 {
-                    label: 'Tipo 2',
+                    label: 'Fruta2 2',
                     data: [],
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
@@ -188,9 +188,13 @@
 
     async function fetchDataAndUpdateChart() {
         const period = document.getElementById('period').value;
-        const response = await fetch(`http://172.203.231.235:8080/get-graph-data?date=${period}`);
+        if (!period) {
+            alert("Please select a date to fetch the data.");
+            return; // Prevent fetching if no date is selected
+        }
+        const response = await fetch(`http://172.203.231.235:8080/get-graph-data`);
         const data = await response.json();
-
+        
         const chartData = {
             labels: [],
             datasets: [
@@ -210,6 +214,9 @@
                 }
             ]
         };
+
+        const selectedDate = new Date(period);
+        data.production_data = data.production_data.filter(item => new Date(item.date) >= selectedDate);
 
         const dates = [];
 
@@ -234,41 +241,9 @@
             type: document.getElementById('chartType').value || 'bar',
             data: chartData,
             options: {
-                plugins: {
-                    background: {
-                        color: 'white' // Set the background color to white
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            color: 'rgb(255, 99, 132)'
-                        }
-                    }
-                },
                 scales: {
                     y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Quantidade Produzida',
-                            color: '#111',
-                            font: {
-                                size: 16
-                            }
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Data de Produção',
-                            color: '#111',
-                            font: {
-                                size: 16
-                            }
-                        }
+                        beginAtZero: true
                     }
                 }
             }
@@ -287,3 +262,4 @@
         link.click();
     }
 </script>
+
