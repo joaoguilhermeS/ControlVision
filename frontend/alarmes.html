@@ -106,11 +106,25 @@
 </div>
 
 <script>
-    function filterAlarms() {
-        // Implement fetching and displaying alarms based on selected filters
-        console.log('Fetching alarms based on filters...');
-        // Example logic to fetch and display alarms
-        // This part needs to be integrated with your backend API to fetch actual alarm data
+    async function filterAlarms() {
+        const alarmType = document.getElementById('alarmType').value;
+        const period = document.getElementById('period').value;
+        const response = await fetch(`http://172.203.231.235:8080/get-all-alarmes`);
+        const data = await response.json();
+        const alarms = data.alarmes;
+        const filteredAlarms = alarms.filter(alarm => {
+            const alarmDate = new Date(alarm[1]);
+            const inputDate = new Date(period);
+            return alarm[2] === alarmType && alarmDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
+        });
+        const alarmsDisplay = document.getElementById('alarmsDisplay');
+        alarmsDisplay.innerHTML = '';
+        filteredAlarms.forEach(alarm => {
+            const alarmDiv = document.createElement('div');
+            alarmDiv.className = `alarm ${alarm[2] === 'critical' ? 'critical' : 'non-critical'}`;
+            alarmDiv.textContent = `${alarm[1]} - ${alarm[3]}`;
+            alarmsDisplay.appendChild(alarmDiv);
+        });
     }
 </script>
 
