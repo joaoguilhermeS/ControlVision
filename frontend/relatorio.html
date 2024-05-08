@@ -93,7 +93,13 @@
 <script>
     var chart; // This will hold the chart instance
 
-    function updateChart() {
+    async function fetchData() {
+        const response = await fetch('http://172.203.231.235:8080/get-production-sum-per-item-per-day');
+        const data = await response.json();
+        updateChart(data.production_data);
+    }
+
+    function updateChart(productionData) {
         const ctx = document.getElementById('productivityChart').getContext('2d');
         if (chart) {
             chart.destroy(); // Destroy the old chart instance before creating a new one
@@ -127,7 +133,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        updateChart(); // Initialize the chart when the page loads
+        fetchData(); // Fetch data and initialize the chart when the page loads
     });
 </script>
 
