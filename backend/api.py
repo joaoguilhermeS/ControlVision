@@ -569,13 +569,13 @@ async def delete_camera(id: int):
     #         await conn.close()
     return {"message": "Camera deleted successfully!"}
 @app.post("/create-sensor")
-async def create_sensor(ip: str = Form(...), unidade: str = Form(...), valor: float = Form(...), id_ext: int = Form(...)):
+async def create_sensor(ip: str = Form(...), unidade: str = Form(...), id_ext: int = Form(...)):
     conn = None
     cursor = None
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("INSERT INTO SENSOR (ip, unidade, valor, id_ext) VALUES (%s, %s, %s, %s)", (ip, unidade, valor, id_ext))
+        await cursor.execute("INSERT INTO SENSOR (ip, unidade, valor, id_ext) VALUES (%s, %s, %s, %s)", (ip, unidade, 0, id_ext))
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
