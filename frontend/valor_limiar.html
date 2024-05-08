@@ -1,104 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register Threshold Value</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        padding: 0;
-        margin: 0;
-    }
-    .topnav {
-        background-color: #333;
-        overflow: hidden;
-        color: white;
-        padding: 10px 20px;
-    }
-    .topnav a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 16px;
-    }
-    .topnav .role {
-        float: right;
-        color: #f2f2f2;
-        padding: 14px 16px;
-    }
-    .container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        margin: 20px;
-        width: calc(100% - 40px); /* Adjust width */
-        box-sizing: border-box;
-    }
-    select, input[type="number"] {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-    .buttons-container {
-        display: flex;
-        gap: 10px;
-    }
-    button {
-        flex-grow: 1;
-        padding: 10px 20px; /* Standardize padding for buttons */
-        font-size: 16px; /* Increase font size */
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    button.cancel {
-        background-color: #ff4444; /* Brighter red */
-        color: white;
-    }
-    button.save {
-        background-color: #00C851; /* Brighter green */
-        color: white;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Valor de Limiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .topnav {
+            background-color: #333;
+            overflow: hidden;
+            color: white;
+            padding: 10px 20px;
+        }
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .topnav .role {
+            float: right;
+            color: #f2f2f2;
+            padding: 14px 16px;
+        }
+        .container {
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        label {
+            margin-bottom: 5px;
+            display: block;
+            font-weight: bold;
+        }
+        select, input[type="text"], input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        input[type="button"] {
+            flex: 1; /* Allows the buttons to grow and fill the container */
+            margin: 5px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cancel {
+            background-color: #ff6347;
+        }
+        .save {
+            background-color: #32cd32;
+        }
+    </style>
 </head>
 <body>
 
 <div class="topnav">
     <a href="#home">Início</a>
     <a href="#settings">Configurações</a>
-    <a href="alarmes.html">Alarmes</a>
+    <a href="#alarms">Alarmes</a>
     <a href="#report">Relatório</a>
     <a href="#maintenance">Manutenção</a>
-    <div class="role">Perfil Gerente</div>
+    <div class="role">Gerente</div>
 </div>
 
 <div class="container">
-    <h2>Cadastrar Valor de Limiar</h2>
-    <form action="/submit-form" method="post">
-        <label for="device"><strong>Dispositivo:</strong></label>
-        <select id="device" name="device">
-            <option>Sensor</option>
-            <option>Câmera</option>
+    <h2>CADASTRAR VALOR DE LIMIAR</h2>
+    <form>
+        <label for="device">Dispositivo:</label>
+        <select id="device">
+            <option>Selecione o Dispositivo</option>
+            <!-- Options will be populated here -->
         </select>
-
-        <label for="threshold"><strong>Novo Valor de Limiar:</strong></label>
-        <input type="number" id="threshold" name="threshold" placeholder="Digite o valor desejado" min="0" step="any" required>
-
-        <div class="buttons-container">
-            <button type="submit" class="save">Salvar</button>
-            <button type="button" class="cancel">Cancelar</button>
+        <br>
+        <br>
+        <label for="threshold">Novo valor de Limiar:</label>
+        <input type="text" id="threshold" placeholder="um valor real com o limiar desejado">
+        <div class="button-group">
+            <input type="button" value="Cancelar" class="cancel">
+            <input type="button" value="Salvar" class="save">
         </div>
     </form>
 </div>
+
+<script>
+    async function fetchDevices() {
+        try {
+            const response = await fetch('http://172.203.231.235:8080/get-all-cameras-and-sensors');
+            const data = await response.json();
+            const select = document.getElementById('device');
+            data.sensors.forEach(sensor => {
+                const option = document.createElement('option');
+                option.value = sensor[0]; // Assuming first element is the ID
+                option.text = sensor[1]; // Assuming second element is the name
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Failed to fetch devices:', error);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchDevices);
+</script>
 
 </body>
 </html>
