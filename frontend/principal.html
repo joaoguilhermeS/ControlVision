@@ -125,7 +125,7 @@
     <a href="alarmes.html">Alarmes</a>
     <a href="relatorio.html">Relatório</a>
     <a href="manutencoes.html">Manutenção</a>
-    <div class="role" id="userRole">Carregando...</div>
+    <div class="role" id="userRole">Usuário: Carregando...</div>
 </div>
 
 <div class="container">
@@ -322,15 +322,17 @@
     }
 
     function fetchUserRole() {
-        fetch('http://172.203.231.235:8080/tipo-de-usuario')
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('userRole').textContent = data.tipo_de_usuario;
-        })
-        .catch(error => {
-            console.error('Erro ao buscar tipo de usuário:', error);
-            document.getElementById('userRole').textContent = 'Erro ao carregar';
-        });
+        function fetchUserRole() {
+            fetch('http://172.203.231.235:8080/tipo-de-usuario')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('userRole').textContent = 'Usuário: ' + data.tipo_de_usuario;
+            })
+            .catch(error => {
+                console.error('Erro ao buscar tipo de usuário:', error);
+                document.getElementById('userRole').textContent = 'Usuário: Erro ao carregar';
+            });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -385,3 +387,4 @@
     display: block;
 }
 </style>
+    fetchUserRole();
