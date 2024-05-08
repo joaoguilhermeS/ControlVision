@@ -134,9 +134,36 @@
             type: document.getElementById('chartType').value || 'bar',
             data: chartData,
             options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: 'rgb(255, 99, 132)'
+                        }
+                    }
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Quantidade Produzida',
+                            color: '#111',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Data de Produção',
+                            color: '#111',
+                            font: {
+                                size: 16
+                            }
+                        }
                     }
                 }
             }
@@ -200,9 +227,36 @@
             type: document.getElementById('chartType').value || 'bar',
             data: chartData,
             options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: 'rgb(255, 99, 132)'
+                        }
+                    }
+                },
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Quantidade Produzida',
+                            color: '#111',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Data de Produção',
+                            color: '#111',
+                            font: {
+                                size: 16
+                            }
+                        }
                     }
                 }
             }
