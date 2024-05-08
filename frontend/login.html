@@ -94,7 +94,19 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    if (data.tipo_de_usuario === 'Gerente') {
+                    fetch('http://172.203.231.235:8080/tipo-de-usuario')
+                    .then(response => response.json())
+                    .then(userData => {
+                        if (userData.tipo_de_usuario === 'Gerente') {
+                            window.location.href = 'principal.html';
+                        } else {
+                            window.location.href = 'principal_convidados.html';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao determinar o tipo de usuário:', error);
+                        alert('Erro ao conectar ao servidor para determinar o tipo de usuário.');
+                    });
                         window.location.href = 'principal.html';
                     } else {
                         window.location.href = 'principal_convidados.html';
