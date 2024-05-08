@@ -1061,9 +1061,9 @@ async def get_all_manutencoes():
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("SELECT * FROM MANUTENCAO")
+        await cursor.execute("SELECT id, data_de_manuntencao, descricao, tipo, id_rsa FROM MANUTENCAO")
         manutencoes = await cursor.fetchall()
-        return {"manutencoes": manutencoes}
+        return {"manutencoes": [list(manut) for manut in manutencoes]}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
