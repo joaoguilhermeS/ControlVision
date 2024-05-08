@@ -88,7 +88,8 @@
     var chart; // This will hold the chart instance
 
     async function fetchDataAndUpdateChart() {
-        const response = await fetch('http://172.203.231.235:8080/get-graph-data');
+        const period = document.getElementById('period').value;
+        const response = await fetch(`http://172.203.231.235:8080/get-graph-data?date=${period}`);
         const data = await response.json();
         
         const chartData = {
@@ -186,7 +187,8 @@
     var chart; // This will hold the chart instance
 
     async function fetchDataAndUpdateChart() {
-        const response = await fetch('http://172.203.231.235:8080/get-graph-data');
+        const period = document.getElementById('period').value;
+        const response = await fetch(`http://172.203.231.235:8080/get-graph-data?date=${period}`);
         const data = await response.json();
 
         const chartData = {
