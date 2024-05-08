@@ -105,11 +105,26 @@
 </div>
 
 <script>
-    function filterMaintenances() {
-        // Implement fetching and displaying maintenances based on selected filters
-        console.log('Fetching maintenances based on filters...');
-        // Example logic to fetch and display maintenances
-        // This part needs to be integrated with your backend API to fetch actual maintenance data
+    async function filterMaintenances() {
+        const maintenanceType = document.getElementById('maintenanceType').value;
+        const period = document.getElementById('period').value;
+        const response = await fetch(`http://172.203.231.235:8080/get-all-manutencoes`);
+        const data = await response.json();
+        const maintenances = data.manutencoes;
+        const filteredMaintenances = maintenances.filter(maintenance => {
+            const maintenanceDate = new Date(maintenance[1]);
+            const inputDate = new Date(period);
+            const isDateMatch = maintenanceDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
+            return maintenance[2] === maintenanceType && isDateMatch;
+        });
+        const maintenancesDisplay = document.getElementById('maintenancesDisplay');
+        maintenancesDisplay.innerHTML = '';
+        filteredMaintenances.forEach(maintenance => {
+            const maintenanceDiv = document.createElement('div');
+            maintenanceDiv.className = 'maintenance';
+            maintenanceDiv.textContent = `${maintenance[1]} - ${maintenance[3]}`;
+            maintenancesDisplay.appendChild(maintenanceDiv);
+        });
     }
 </script>
 
