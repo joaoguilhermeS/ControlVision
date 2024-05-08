@@ -1,81 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alarm Visualization</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-        padding: 0;
-        margin: 0;
-    }
-    .topnav {
-        background-color: #333;
-        overflow: hidden;
-        color: white;
-        padding: 10px 20px;
-    }
-    .topnav a {
-        float: left;
-        color: #f2f2f2;
-        text-align: center;
-        padding: 14px 16px;
-        text-decoration: none;
-        font-size: 16px;
-    }
-    .topnav .role {
-        float: right;
-        color: #f2f2f2;
-        padding: 14px 16px;
-    }
-    .container {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        margin: 20px;
-        width: calc(100% - 40px); /* Adjust width */
-        box-sizing: border-box;
-    }
-    select, input[type="button"] {
-        padding: 10px;
-        margin: 10px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-    input[type="button"] {
-        background-color: #4CAF50;
-        color: white;
-        cursor: pointer;
-    }
-    .alarms-list {
-        height: 300px; /* Adjustable based on your preference */
-        overflow: auto;
-        border: 1px solid #ccc;
-        margin-top: 10px;
-    }
-    .alarm {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
-    .critical {
-        background-color: #f44336; /* Red for critical alarms */
-    }
-    .non-critical {
-        background-color: #ffeb3b; /* Yellow for non-critical alarms */
-    }
-    .info {
-        background-color: #4CAF50; /* Green for informational */
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisory System - Alarm Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #cfcfcf;
+            padding: 0;
+            margin: 0;
+        }
+        .topnav {
+            background-color: #333;
+            overflow: hidden;
+            color: white;
+            padding: 10px 20px;
+        }
+        .topnav a {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .topnav .role {
+            float: right;
+            color: #f2f2f2;
+            padding: 14px 16px;
+        }
+        .back-button {
+            float: left;
+            font-size: 24px;
+            line-height: 16px;
+            cursor: pointer;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .alarms-list {
+            overflow-y: auto;
+            height: 300px; /* Adjust height as needed */
+            border: 1px solid #ccc;
+        }
+        .alarm {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            color: #fff;
+        }
+        .critical { background-color: #ff5722; }
+        .non-critical { background-color: #4caf50; }
+        select, input[type="button"] {
+            padding: 8px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="topnav">
+    <div class="back-button" onclick="window.history.back();">&larr;</div>
     <a href="#home">Início</a>
     <a href="#tools">Ferramentas</a>
     <a href="#alarms">Alarmes</a>
@@ -85,28 +82,37 @@
 </div>
 
 <div class="container">
-    <h2>Visualização de Alarmes</h2>
-    <div>
-        <label for="alarm-type">Tipo de Alarme</label>
-        <select id="alarm-type">
-            <option value="critical">Críticos</option>
-            <option value="non-critical">Não críticos</option>
-        </select>
-        <label for="period">Período:</label>
-        <select id="period">
-            <option value="last-hour">Última hora</option>
-            <option value="today">Hoje</option>
-            <option value="week">Esta semana</option>
-        </select>
-        <input type="button" value="Aplicar">
+    <div class="filters">
+        <div>
+            <label for="alarmType">Tipo de Alarme</label>
+            <select id="alarmType">
+                <option value="critical">Críticos</option>
+                <option value="non-critical">Não críticos</option>
+            </select>
+        </div>
+        <div>
+            <label for="period">Período:</label>
+            <input type="date" id="period">
+        </div>
+        <input type="button" value="Aplicar" onclick="filterAlarms();">
     </div>
-    <div class="alarms-list">
-        <div class="alarm info">27/03/2024 18:12:23 - Manutenção</div>
+
+    <div class="alarms-list" id="alarmsDisplay">
+        <!-- Example content -->
         <div class="alarm non-critical">27/03/2024 18:12:23 - Sensor X excedeu 30 graus</div>
         <div class="alarm critical">27/03/2024 18:12:23 - Alarme crítico</div>
-        <div class="alarm critical">27/03/2024 18:12:23 - Alarme crítico</div>
+        <!-- Dynamic alarm content will be added here -->
     </div>
 </div>
+
+<script>
+    function filterAlarms() {
+        // Implement fetching and displaying alarms based on selected filters
+        console.log('Fetching alarms based on filters...');
+        // Example logic to fetch and display alarms
+        // This part needs to be integrated with your backend API to fetch actual alarm data
+    }
+</script>
 
 </body>
 </html>
