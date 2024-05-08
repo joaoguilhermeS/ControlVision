@@ -53,11 +53,11 @@
 <body>
 
 <div class="topnav">
-    <a href="#home">Início</a>
-    <a href="#settings">Configurações</a>
-    <a href="#alarms">Alarmes</a>
-    <a href="#report">Relatório</a>
-    <a href="#maintenance">Manutenção</a>
+    <a href="principal.html">Início</a>
+    <a href="configuracoes.html">Configurações</a>
+    <a href="alarmes.html">Alarmes</a>
+    <a href="relatorio.html">Relatório</a>
+    <a href="manutencoes.html">Manutenção</a>
     <div class="role">Gerente</div>
 </div>
 
@@ -73,7 +73,7 @@
         <label for="chartType">Tipo de Gráfico:</label>
         <select id="chartType">
             <option value="bar">Barra</option>
-            <option value="line">Linha</option>
+            <!-- <option value="line">Linha</option> -->
         </select>
         <input type="button" value="Aplicar" onclick="fetchDataAndUpdateChart();">
         <input type="button" value="Exportar" onclick="exportChart();">
@@ -189,7 +189,7 @@
     async function fetchDataAndUpdateChart() {
         const period = document.getElementById('period').value;
         if (!period) {
-            alert("Please select a date to fetch the data.");
+            // alert("Please select a date to fetch the data.");
             return; // Prevent fetching if no date is selected
         }
         const response = await fetch(`http://172.203.231.235:8080/get-graph-data`);

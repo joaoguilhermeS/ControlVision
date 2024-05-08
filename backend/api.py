@@ -911,11 +911,23 @@ async def get_alarme(id: int):
     #     if conn:
     #         await conn.close()
 
+tipo_de_usuario = ''
+
 @app.post("/login")
 async def login(username: str = Form(...), password: str = Form(...)):
     conn = None
     cursor = None
-    print("oi")
+
+    global tipo_de_usuario
+    if('admin' in username):
+        tipo_de_usuario = "Gerente"
+    
+    elif('dev' in username):
+        tipo_de_usuario = "Dev"
+    
+    elif('convidado' in username):
+        tipo_de_usuario = "Convidado"
+
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
@@ -1104,5 +1116,10 @@ async def get_all_cameras_and_sensors():
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@app.get("/tipo-de-usuario")
+async def get_tipo_de_usuario():
+    global tipo_de_usuario
+    return {"tipo_de_usuario": tipo_de_usuario}
+
 if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.get("/get-production-sum-per-item-per-day")
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
