@@ -1091,3 +1091,22 @@ async def get_production_sum_per_item_per_day():
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.get("/get-production-sum-per-item-per-day")
 
+@app.get("/get-all-cameras-and-sensors")
+async def get_all_cameras_and_sensors():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("SELECT * FROM CAMERA")
+        cameras = await cursor.fetchall()
+        await cursor.execute("SELECT * FROM SENSOR")
+        sensors = await cursor.fetchall()
+        return {"cameras": cameras, "sensors": sensors}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
