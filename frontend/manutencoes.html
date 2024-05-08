@@ -110,19 +110,25 @@
         const period = document.getElementById('period').value;
         const response = await fetch(`http://172.203.231.235:8080/get-all-manutencoes`);
         const data = await response.json();
-        const maintenances = data.manutencoes;
+        const maintenances = data.manutencoes.map(maintenance => ({
+            id: maintenance[0],
+            date: maintenance[1],
+            description: maintenance[2],
+            tipo: maintenance[3] === 'id_rsa' ? 1 : 2  // Assuming 'id_rsa' indicates 'Preventiva' for demonstration
+        }));
         const filteredMaintenances = maintenances.filter(maintenance => {
             const maintenanceDate = new Date(maintenance[1]);
+            const maintenanceDate = new Date(maintenance.date);
             const inputDate = new Date(period);
             const isDateMatch = maintenanceDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
-            return maintenance[2] === maintenanceType && isDateMatch;
+            return (maintenanceType === 'preventiva' ? maintenance.tipo === 1 : maintenance.tipo === 2) && isDateMatch;
         });
         const maintenancesDisplay = document.getElementById('maintenancesDisplay');
         maintenancesDisplay.innerHTML = '';
         filteredMaintenances.forEach(maintenance => {
             const maintenanceDiv = document.createElement('div');
             maintenanceDiv.className = 'maintenance';
-            maintenanceDiv.textContent = `${maintenance[1]} - ${maintenance[3]}`;
+            maintenanceDiv.textContent = `${maintenance.date} - ${maintenance.description}`;
             maintenancesDisplay.appendChild(maintenanceDiv);
         });
     }
