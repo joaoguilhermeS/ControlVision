@@ -150,6 +150,69 @@
 
 </body>
 </html>
+<script>
+    var chart; // This will hold the chart instance
+
+    async function fetchDataAndUpdateChart() {
+        const response = await fetch('http://172.203.231.235:8080/get-graph-data');
+        const data = await response.json();
+
+        const chartData = {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Tipo 1',
+                    data: [],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Tipo 2',
+                    data: [],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        const dates = [];
+
+        data.production_data.forEach(item => {
+            const dateIndex = dates.indexOf(item.date);
+            if (dateIndex === -1) {
+                dates.push(item.date);
+                chartData.labels.push(item.date);
+                chartData.datasets[0].data.push(item.tipo === 1 ? item.total : 0);
+                chartData.datasets[1].data.push(item.tipo === 2 ? item.total : 0);
+            } else {
+                chartData.datasets[0].data[dateIndex] += item.tipo === 1 ? item.total : 0;
+                chartData.datasets[1].data[dateIndex] += item.tipo === 2 ? item.total : 0;
+            }
+        });
+
+        const ctx = document.getElementById('productivityChart').getContext('2d');
+        if (chart) {
+            chart.destroy(); // Destroy the old chart instance before creating a new one
+        }
+        chart = new Chart(ctx, {
+            type: document.getElementById('chartType').value || 'bar',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchDataAndUpdateChart(); // Fetch and display the data when the page loads
+    });
+
     function exportChart() {
         const url = chart.toBase64Image(); // Get the image URL
         const link = document.createElement('a');
@@ -157,3 +220,4 @@
         link.download = 'productivity-report.png'; // Set the download file name
         link.click();
     }
+</script>
