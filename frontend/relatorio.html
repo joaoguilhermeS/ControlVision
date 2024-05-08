@@ -64,15 +64,9 @@
 <div class="container">
     <h2>RELATÓRIO DE PRODUTIVIDADE</h2>
     <div class="select-container">
-        <label for="device">Câmera/Sensor:</label>
-        <select id="device">
-            <option>Selecione o dispositivo</option>
-            <!-- Populate dynamically if needed -->
-        </select>
         <label for="database">Banco de Dados:</label>
         <select id="database">
-            <option>Selecione o banco de dados</option>
-            <!-- Populate dynamically if needed -->
+            <option>Localhost MySQL</option>
         </select>
         <label for="period">Período:</label>
         <input type="date" id="period">
@@ -81,7 +75,7 @@
             <option value="bar">Barra</option>
             <option value="line">Linha</option>
         </select>
-        <input type="button" value="Aplicar" onclick="updateChart();">
+        <input type="button" value="Aplicar" onclick="fetchDataAndUpdateChart();">
         <input type="button" value="Exportar">
     </div>
     <div class="chart-container">
@@ -93,35 +87,52 @@
 <script>
     var chart; // This will hold the chart instance
 
-    async function fetchData() {
-        const response = await fetch('http://172.203.231.235:8080/get-production-sum-per-item-per-day');
+    async function fetchDataAndUpdateChart() {
+        const response = await fetch('http://172.203.231.235:8080/get-graph-data');
         const data = await response.json();
-        updateChart(data.production_data);
-    }
+        
+        const chartData = {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Tipo 1',
+                    data: [],
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Tipo 2',
+                    data: [],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
 
-    function updateChart(productionData) {
+        const dates = [];
+
+        data.production_data.forEach(item => {
+            const dateIndex = dates.indexOf(item.date);
+            if (dateIndex === -1) {
+                dates.push(item.date);
+                chartData.labels.push(item.date);
+                chartData.datasets[0].data.push(item.tipo === 1 ? item.total : 0);
+                chartData.datasets[1].data.push(item.tipo === 2 ? item.total : 0);
+            } else {
+                chartData.datasets[0].data[dateIndex] += item.tipo === 1 ? item.total : 0;
+                chartData.datasets[1].data[dateIndex] += item.tipo === 2 ? item.total : 0;
+            }
+        });
+
         const ctx = document.getElementById('productivityChart').getContext('2d');
         if (chart) {
             chart.destroy(); // Destroy the old chart instance before creating a new one
         }
         chart = new Chart(ctx, {
             type: document.getElementById('chartType').value || 'bar',
-            data: {
-                labels: ['23/03/2024', '24/03/2024', '25/03/2024'],
-                datasets: [{
-                    label: 'Uva Verde',
-                    data: [10, 15, 20],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }, {
-                    label: 'Uva Rocha',
-                    data: [5, 10, 15],
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    borderWidth: 1
-                }]
-            },
+            data: chartData,
             options: {
                 scales: {
                     y: {
@@ -133,7 +144,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetchData(); // Fetch data and initialize the chart when the page loads
+        fetchDataAndUpdateChart(); // Fetch and display the data when the page loads
     });
 </script>
 
