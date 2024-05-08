@@ -62,7 +62,8 @@
             color: #fff;
         }
         .critical { background-color: #ff5722; }
-        .non-critical { background-color: #4caf50; }
+        .warning { background-color: #ffeb3b; color: #333; }
+        .safe { background-color: #4caf50; }
         select, input[type="button"] {
             padding: 8px;
             margin-right: 10px;
@@ -107,13 +108,9 @@
         const period = document.getElementById('period').value;
         const response = await fetch(`http://172.203.231.235:8080/get-all-alarmes`);
         const data = await response.json();
-        const alarms = data.alarmes.map(alarm => ({
-            date: alarm[0],
-            type: alarm[1],
-            description: alarm[2]
-        }));
+        const alarms = data.alarmes;
         const filteredAlarms = alarms.filter(alarm => {
-            const alarmDate = new Date(alarm.date);
+            const alarmDate = new Date(alarm[1]);
             const inputDate = new Date(period);
             const isDateMatch = alarmDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
             if (alarmType === 'critical') {
@@ -127,23 +124,9 @@
         alarmsDisplay.innerHTML = '';
         filteredAlarms.forEach(alarm => {
             const alarmDiv = document.createElement('div');
-            let alarmClass = 'alarm';
-            switch(alarm[2]) {
-                case '1':
-                    alarmClass += ' red';
-                    break;
-                case '2':
-                    alarmClass += ' yellow';
-                    break;
-                case '3':
-                    alarmClass += ' green';
-                    break;
-                default:
-                    alarmClass += ' default';
-                    break;
-            }
-            alarmDiv.className = alarmClass;
-            alarmDiv.textContent = `${alarm.date} - ${alarm.description}`;
+            const alarmClass = alarm[2] === '1' ? 'critical' : alarm[2] === '2' ? 'warning' : 'safe';
+            alarmDiv.className = `alarm ${alarmClass}`;
+            alarmDiv.textContent = `${alarm[1]} - ${alarm[3]}`;
             alarmsDisplay.appendChild(alarmDiv);
         });
     }

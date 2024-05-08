@@ -245,8 +245,10 @@
         .then(response => response.json())
         .then(data => {
             const alarmsContainer = document.getElementById('alarmsList');
+            alarmsContainer.innerHTML = ''; // Clear existing alarms before adding new ones
         alarmsContainer.innerHTML = ''; // Clear existing alarms before adding new ones
             if (data.alarmes && data.alarmes.length > 0) {
+                data.alarmes.sort((a, b) => new Date(b[1]) - new Date(a[1])); // Sort by date descending
                 data.alarmes.forEach(alarm => {
                     const alarmDiv = document.createElement('div');
                     let alarmClass = 'alarm';

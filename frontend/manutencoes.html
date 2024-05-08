@@ -39,9 +39,10 @@
         .container {
             background-color: #fff;
             padding: 20px;
-            margin: 20px;
+            margin: 20px auto;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 80%; /* Set width to match your design */
             display: flex;
             flex-direction: column;
         }
@@ -60,6 +61,10 @@
             margin: 5px;
             border-radius: 5px;
             background-color: #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         select, input[type="date"], input[type="button"] {
             padding: 8px;
@@ -98,8 +103,6 @@
 
     <div class="maintenances-list" id="maintenancesDisplay">
         <!-- Example content -->
-        <div class="maintenance">27/03/2024 18:12:23 - Manutenção 1</div>
-        <div class="maintenance">27/03/2024 18:12:23 - Manutenção 2</div>
         <!-- Dynamic maintenance content will be added here -->
     </div>
 </div>
@@ -108,27 +111,26 @@
     async function filterMaintenances() {
         const maintenanceType = document.getElementById('maintenanceType').value;
         const period = document.getElementById('period').value;
-        const response = await fetch(`http://172.203.231.235:8080/get-all-manutencoes`);
+        const response = await fetch('http://172.203.231.235:8080/get-all-manutencoes');
         const data = await response.json();
         const maintenances = data.manutencoes.map(maintenance => ({
             id: maintenance[0],
             date: maintenance[1],
             description: maintenance[2],
-            tipo: maintenance[3] === 'id_rsa' ? 1 : 2  // Assuming 'id_rsa' indicates 'Preventiva' for demonstration
+            tipo: maintenance[3] === 'id_rsa' ? 'preventiva' : 'corretiva'
         }));
         const filteredMaintenances = maintenances.filter(maintenance => {
-            const maintenanceDate = new Date(maintenance[1]);
             const maintenanceDate = new Date(maintenance.date);
             const inputDate = new Date(period);
             const isDateMatch = maintenanceDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
-            return (maintenanceType === 'preventiva' ? maintenance.tipo === 1 : maintenance.tipo === 2) && isDateMatch;
+            return (!maintenanceType || maintenance.tipo === maintenanceType) && (!period || isDateMatch);
         });
         const maintenancesDisplay = document.getElementById('maintenancesDisplay');
         maintenancesDisplay.innerHTML = '';
         filteredMaintenances.forEach(maintenance => {
             const maintenanceDiv = document.createElement('div');
             maintenanceDiv.className = 'maintenance';
-            maintenanceDiv.textContent = `${maintenance.date} - ${maintenance.description}`;
+            maintenanceDiv.innerHTML = `<span>${maintenance.date}</span><span>${maintenance.description}</span>`;
             maintenancesDisplay.appendChild(maintenanceDiv);
         });
     }
