@@ -356,6 +356,7 @@ async def delete_vps(ip: str):
     #     if conn:
     #         await conn.close()
     return {"message": "VPS deleted successfully!"}
+
 @app.post("/create-manutencao")
 async def create_manutencao(data_de_manuntencao: datetime = Form(...), descricao: str = Form(...), tipo: int = Form(...), id_rsa: str = Form(...)):
     conn = None
