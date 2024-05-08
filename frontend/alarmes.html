@@ -107,9 +107,13 @@
         const period = document.getElementById('period').value;
         const response = await fetch(`http://172.203.231.235:8080/get-all-alarmes`);
         const data = await response.json();
-        const alarms = data.alarmes;
+        const alarms = data.alarmes.map(alarm => ({
+            date: alarm[0],
+            type: alarm[1],
+            description: alarm[2]
+        }));
         const filteredAlarms = alarms.filter(alarm => {
-            const alarmDate = new Date(alarm[1]);
+            const alarmDate = new Date(alarm.date);
             const inputDate = new Date(period);
             const isDateMatch = alarmDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
             if (alarmType === 'critical') {
@@ -139,7 +143,7 @@
                     break;
             }
             alarmDiv.className = alarmClass;
-            alarmDiv.textContent = `${alarm[1]} - ${alarm[3]}`;
+            alarmDiv.textContent = `${alarm.date} - ${alarm.description}`;
             alarmsDisplay.appendChild(alarmDiv);
         });
     }
