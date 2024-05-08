@@ -1057,7 +1057,7 @@ async def check_and_create_alarme(temperatura):
 @app.get("/get-all-manutencoes")
 async def get_all_manutencoes():
     conn = None
-    cursor = None
+    cursor = None   
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
