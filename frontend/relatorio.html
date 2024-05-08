@@ -76,7 +76,7 @@
             <option value="line">Linha</option>
         </select>
         <input type="button" value="Aplicar" onclick="fetchDataAndUpdateChart();">
-        <input type="button" value="Exportar">
+        <input type="button" value="Exportar" onclick="exportChart();">
     </div>
     <div class="chart-container">
         <canvas id="productivityChart"></canvas>
@@ -150,3 +150,10 @@
 
 </body>
 </html>
+    function exportChart() {
+        const url = chart.toBase64Image(); // Get the image URL
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'productivity-report.png'; // Set the download file name
+        link.click();
+    }
