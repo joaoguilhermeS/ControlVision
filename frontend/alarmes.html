@@ -115,7 +115,13 @@
         const filteredAlarms = alarms.filter(alarm => {
             const alarmDate = new Date(alarm[1]);
             const inputDate = new Date(period);
-            return alarm[2] === alarmType && alarmDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
+            const isDateMatch = alarmDate.toISOString().slice(0, 10) === inputDate.toISOString().slice(0, 10);
+            if (alarmType === 'critical') {
+                return alarm[2] === '1' && isDateMatch;
+            } else if (alarmType === 'non-critical') {
+                return (alarm[2] === '2' || alarm[2] === '3') && isDateMatch;
+            }
+            return isDateMatch;
         });
         const alarmsDisplay = document.getElementById('alarmsDisplay');
         alarmsDisplay.innerHTML = '';
