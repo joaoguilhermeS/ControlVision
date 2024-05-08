@@ -93,7 +93,7 @@
 <div class="container">
     <div class="form-container">
         <h2>CADASTRAR NOVO SENSOR</h2>
-        <form action="http://172.203.231.235:8080/create-sensor" method="post" enctype="multipart/form-data">
+        <form action="http://172.203.231.235:8080/create-sensor" method="post" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
             <label for="ip">Apelido:</label>
             <input type="text" id="ip" name="ip" placeholder="Camera 1">
 
@@ -116,3 +116,24 @@
 
 </body>
 </html>
+<script>
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Sensor created successfully!') {
+                alert('Sensor Cadastrado com Sucesso');
+                window.location.href = 'principal.html';
+            } else {
+                alert('Erro ao cadastrar sensor: ' + data.detail);
+            }
+        })
+        .catch(error => alert('Erro ao enviar o formulário: ' + error));
+    }
+</script>
