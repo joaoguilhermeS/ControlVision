@@ -136,7 +136,7 @@
 
 <div class="container">
     <div class="section">
-        <div class="alarms">
+        <div class="alarms" style="max-height: 150px; overflow-y: auto;">
             <h2>Alarmes</h2>
             <div id="alarmsList"></div>
         </div>
@@ -249,7 +249,8 @@
         alarmsContainer.innerHTML = ''; // Clear existing alarms before adding new ones
             if (data.alarmes && data.alarmes.length > 0) {
                 data.alarmes.sort((a, b) => new Date(b[1]) - new Date(a[1])); // Sort by date descending
-                data.alarmes.forEach(alarm => {
+                data.alarmes.sort((a, b) => new Date(b[1]) - new Date(a[1])); // Sort by date descending
+                data.alarmes.slice(0, 5).forEach(alarm => { // Show only the first 5 alarms
                     const alarmDiv = document.createElement('div');
                     let alarmClass = 'alarm';
                     switch(alarm[2]) {
