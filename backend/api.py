@@ -983,8 +983,6 @@ async def get_todays_production_sum_per_user():
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
-
 @app.get("/get-todays-production-sum-per-item")
 async def get_todays_production_sum_per_item():
     conn = None
