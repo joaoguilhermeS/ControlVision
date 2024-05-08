@@ -357,13 +357,13 @@ async def delete_vps(ip: str):
     #         await conn.close()
     return {"message": "VPS deleted successfully!"}
 @app.post("/create-manutencao")
-async def create_manutencao(data_de_manuntencao: datetime = Form(...), descricao: str = Form(...), id_rsa: str = Form(...)):
+async def create_manutencao(data_de_manuntencao: datetime = Form(...), descricao: str = Form(...), tipo: int = Form(...), id_rsa: str = Form(...)):
     conn = None
     cursor = None
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("INSERT INTO MANUTENCAO (data_de_manuntencao, descricao, id_rsa) VALUES (%s, %s, %s)", (data_de_manuntencao, descricao, id_rsa))
+        await cursor.execute("INSERT INTO MANUTENCAO (data_de_manuntencao, descricao, tipo, id_rsa) VALUES (%s, %s, %s, %s)", (data_de_manuntencao, descricao, tipo, id_rsa))
         await conn.commit()
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
