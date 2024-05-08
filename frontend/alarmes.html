@@ -98,10 +98,6 @@
     </div>
 
     <div class="alarms-list" id="alarmsDisplay">
-        <!-- Example content -->
-        <div class="alarm non-critical">27/03/2024 18:12:23 - Sensor X excedeu 30 graus</div>
-        <div class="alarm critical">27/03/2024 18:12:23 - Alarme crítico</div>
-        <!-- Dynamic alarm content will be added here -->
     </div>
 </div>
 
@@ -127,22 +123,7 @@
         alarmsDisplay.innerHTML = '';
         filteredAlarms.forEach(alarm => {
             const alarmDiv = document.createElement('div');
-            let alarmClass = 'alarm';
-            switch(alarm[2]) {
-                case '1':
-                    alarmClass += ' red';
-                    break;
-                case '2':
-                    alarmClass += ' yellow';
-                    break;
-                case '3':
-                    alarmClass += ' green';
-                    break;
-                default:
-                    alarmClass += ' default';
-                    break;
-            }
-            alarmDiv.className = alarmClass;
+            alarmDiv.className = `alarm ${alarm[2] === 'critical' ? 'critical' : 'non-critical'}`;
             alarmDiv.textContent = `${alarm[1]} - ${alarm[3]}`;
             alarmsDisplay.appendChild(alarmDiv);
         });
