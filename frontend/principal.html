@@ -292,8 +292,8 @@
         .then(response => response.json())
         .then(data => {
             const ranking = document.getElementById('productivityRanking');
-        ranking.innerHTML = ''; // Clear existing ranking before adding new ones
-            const productionSums = data.production_sums;
+        ranking.innerHTML = ''; // Clear existing ranking before adding new entries
+            const productionSums = data.production_sums || {};
             Object.keys(productionSums).sort((a, b) => productionSums[b] - productionSums[a]).forEach(user => {
                 const li = document.createElement('li');
                 li.textContent = `${user} - ${productionSums[user]} frutas`;
@@ -306,8 +306,8 @@
         .then(response => response.json())
         .then(data => {
             const totalProducedList = document.getElementById('totalProducedList');
-        totalProducedList.innerHTML = ''; // Clear existing production sums before adding new ones
-            const productionSums = data.production_sums;
+        totalProducedList.innerHTML = ''; // Clear existing production sums before adding new entries
+            const productionSums = data.production_sums || {};
             Object.keys(productionSums).forEach(item => {
                 const li = document.createElement('li');
                 li.textContent = `Item ${item}: ${productionSums[item]} unidades`;
