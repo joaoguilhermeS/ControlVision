@@ -1069,4 +1069,26 @@ async def get_all_manutencoes():
         raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == '__main__':
-    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
+    uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)@app.get("/get-production-sum-per-item-per-day")
+async def get_production_sum_per_item_per_day():
+    conn = None
+    cursor = None
+    try:
+        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
+        cursor = await conn.cursor()
+        await cursor.execute("""
+            SELECT tipo, SUM(quantidade) as total, DATE(data_producao) as production_date
+            FROM PRODUCAO
+            GROUP BY tipo, DATE(data_producao)
+            ORDER BY DATE(data_producao)
+        """)
+        results = await cursor.fetchall()
+        production_data = [{'tipo': result[0], 'total': result[1], 'date': result[2].isoformat()} for result in results]
+        return {"production_data": production_data}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    finally:
+        if cursor:
+            await cursor.close()
+        if conn:
+            await conn.close()
