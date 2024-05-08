@@ -942,7 +942,8 @@ async def get_all_alarmes():
     try:
         conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
         cursor = await conn.cursor()
-        await cursor.execute("SELECT * FROM ALARME")
+        today = date.today()
+        await cursor.execute("SELECT * FROM ALARME WHERE DATE(data_do_alarme) = %s", (today,))
         alarmes = await cursor.fetchall()
         return {"alarmes": alarmes}
     except Exception as e:
