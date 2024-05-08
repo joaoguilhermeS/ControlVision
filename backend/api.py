@@ -1042,39 +1042,18 @@ async def check_and_create_alarme(temperatura):
     tipo = None
     if 25 < temperatura < 30:
         tipo = '3'
-    elif 30 <= temperatura < 35:
+    elif 33 <= temperatura < 37:
         tipo = '2'
-    elif temperatura >= 35:
+    elif temperatura >= 40:
         tipo = '1'
 
     if tipo:
-        existing_alarm = await check_existing_alarm(tipo)
-        if not existing_alarm:
-            await create_alarme({
-                'data_do_alarme': datetime.now(),
-                'tipo': tipo,
-                'texto': f'Temperatura crítica: {temperatura}°C',
-                'id_dispositivo': 1 
-            })
+        await create_alarme({
+            'data_do_alarme': datetime.now(),
+            'tipo': tipo,
+            'texto': f'Temperatura crítica: {temperatura}°C',
+            'id_dispositivo': 1 
+        })
 
 if __name__ == '__main__':
     uvicorn.run("api:app", port=8080, host='0.0.0.0', reload=True, workers=1, proxy_headers=True)
-
-
-async def check_existing_alarm(tipo):
-    conn = None
-    cursor = None
-    try:
-        conn = await aiomysql.connect(host=db_host, port=3306, user=db_user, password=db_password, db=db_database)
-        cursor = await conn.cursor()
-        current_time = datetime.now()
-        await cursor.execute("SELECT * FROM ALARME WHERE tipo=%s AND DATE(data_do_alarme)=%s AND HOUR(data_do_alarme)=%s AND MINUTE(data_do_alarme)=%s", (tipo, current_time.date(), current_time.hour, current_time.minute))
-        alarm = await cursor.fetchone()
-        return alarm
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-    finally:
-        if cursor:
-            await cursor.close()
-        if conn:
-            await conn.close()
